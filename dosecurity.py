@@ -290,6 +290,28 @@ def has_mod_permissions():
                 ctx.author.id in OWNER_IDS)
     return commands.check(predicate)
 
+async def send_dm_notification(member: discord.Member, action: str, reason: str, server_name: str, extra_info: str = None):
+    """Send DM notification to user about moderation action"""
+    try:
+        embed = discord.Embed(
+            title=f"⚠️ Thông Báo Vi Phạm",
+            description=f"Bạn đã bị **{action}** tại server **{server_name}**",
+            color=discord.Color.red(),
+            timestamp=datetime.now()
+        )
+        embed.add_field(name="📝 Lý do", value=reason or "Không có lý do", inline=False)
+        if extra_info:
+            embed.add_field(name="ℹ️ Thông tin thêm", value=extra_info, inline=False)
+        embed.set_footer(text="Vui lòng tuân thủ quy định của server")
+        
+        await member.send(embed=embed)
+        return True
+    except discord.Forbidden:
+        # User has DMs disabled
+        return False
+    except Exception:
+        return False
+
 async def log_moderation_action(ctx, action: str, target: discord.Member, reason: str = None):
     """Log moderation actions to a log channel if exists"""
     log_channel = discord.utils.get(ctx.guild.text_channels, name="mod-log")
@@ -403,17 +425,42 @@ async def warn_user(ctx, member: discord.Member, *, reason: str = "Không có l�
         
         await ctx.send(embed=embed)
         
+        # Send DM notification to user
+        dm_sent = await send_dm_notification(
+            member,
+            f"cảnh báo lần {warning_count}/10",
+            reason,
+            ctx.guild.name,
+            level_config["message"]
+        )
+        
         # Apply action based on warning level
         if level_config["action"] == "timeout":
             try:
                 duration = timedelta(minutes=level_config["duration"])
                 await member.timeout(duration, reason=f"Warning #{warning_count}: {reason}")
                 await ctx.send(f"🔇 {member.mention} đã bị mute {level_config['duration']} phút!")
+                # Send mute notification
+                await send_dm_notification(
+                    member,
+                    f"mute {level_config['duration']} phút",
+                    reason,
+                    ctx.guild.name,
+                    f"Thời gian mute: {level_config['duration']} phút"
+                )
             except discord.Forbidden:
                 await ctx.send("❌ Không có quyền timeout thành viên này!")
         
         elif level_config["action"] == "kick":
             try:
+                # Send DM before kicking
+                await send_dm_notification(
+                    member,
+                    "kick khỏi server",
+                    reason,
+                    ctx.guild.name,
+                    "Bạn có thể join lại server nếu có invite link"
+                )
                 await member.kick(reason=f"Warning #{warning_count}: {reason}")
                 await ctx.send(f"👢 {member.mention} đã bị kick khỏi server!")
             except discord.Forbidden:
@@ -421,6 +468,14 @@ async def warn_user(ctx, member: discord.Member, *, reason: str = "Không có l�
         
         elif level_config["action"] == "ban":
             try:
+                # Send DM before banning
+                await send_dm_notification(
+                    member,
+                    "ban vĩnh viễn",
+                    reason,
+                    ctx.guild.name,
+                    "Bạn sẽ không thể join lại server này"
+                )
                 await member.ban(reason=f"Warning #{warning_count}: {reason}")
                 await ctx.send(f"🔨 {member.mention} đã bị ban vĩnh viễn!")
             except discord.Forbidden:
@@ -501,6 +556,16 @@ async def timeout_member(ctx, member: discord.Member, duration: Optional[str] = 
     try:
         timeout_duration = timedelta(minutes=timeout_minutes)
         reason = reason or "Không có lý do"
+        
+        # Send DM before timeout
+        await send_dm_notification(
+            member,
+            f"timeout {format_duration(timeout_minutes)}",
+            reason,
+            ctx.guild.name,
+            f"Thời gian mute: {format_duration(timeout_minutes)}"
+        )
+        
         await member.timeout(timeout_duration, reason=reason)
         
         embed = discord.Embed(
@@ -553,6 +618,15 @@ async def kick_member(ctx, member: discord.Member, *, reason: str = "Không có 
         return await ctx.send("❌ Không thể kick bot!")
     
     try:
+        # Send DM before kicking
+        await send_dm_notification(
+            member,
+            "kick khỏi server",
+            reason,
+            ctx.guild.name,
+            "Bạn có thể join lại server nếu có invite link"
+        )
+        
         await member.kick(reason=reason)
         
         embed = discord.Embed(
@@ -580,6 +654,15 @@ async def ban_member(ctx, member: discord.Member, *, reason: str = "Không có l
         return await ctx.send("❌ Không thể ban bot!")
     
     try:
+        # Send DM before banning
+        await send_dm_notification(
+            member,
+            "ban vĩnh viễn",
+            reason,
+            ctx.guild.name,
+            "Bạn sẽ không thể join lại server này"
+        )
+        
         await member.ban(reason=reason)
         
         embed = discord.Embed(
