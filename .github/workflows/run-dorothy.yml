@@ -97,8 +97,9 @@ jobs:
         run: |
           # Create .env file from secrets
           @"
-          DISCORD_BOT_TOKEN=${{ secrets.DOROTHY_BOT_TOKEN }}
-          OWNER_ID=${{ secrets.DOROTHY_OWNER_ID }}
+          DISCORD_BOT_TOKEN=${{ secrets.DISCORD_BOT_TOKEN }}
+          OWNER_ID=${{ secrets.BOT_OWNER_IDS }}
+          NVIDIA_API_KEY=${{ secrets.NVIDIA_API_KEY }}
           "@ | Out-File -FilePath ".env" -Encoding utf8
         shell: pwsh
       
@@ -164,6 +165,9 @@ jobs:
           if (!$botProcess.HasExited) {
             Write-Host "Stopping Dorothy bot before 6-hour timeout..." -ForegroundColor Yellow
             Stop-Process -Id $botProcess.Id -Force
+            Write-Host "👍 Dorothy bot configuration:" -ForegroundColor Cyan
+            Write-Host "   Token: [HIDDEN]" -ForegroundColor Gray
+            Write-Host "   Owner ID: ${{ secrets.BOT_OWNER_IDS }}" -ForegroundColor Green
           }
           
           Write-Host "Dorothy bot session completed after 359 minutes" -ForegroundColor Green

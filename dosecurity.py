@@ -41,7 +41,22 @@ from typing import Optional, Dict, List
 # ==================== CONFIGURATION ====================
 BOT_NAME = "DoSecurity"
 PREFIX = "-"
-OWNER_ID = 1344312732278591500
+
+# Load owner ID từ env với default
+default_owner_id = "1344312732278591500"  # ID Discord của bạn
+owner_id_str = os.getenv('BOT_OWNER_IDS', os.getenv('OWNER_ID', default_owner_id))
+
+# Support nhiều owner IDs nếu cần
+if ',' in owner_id_str:
+    OWNER_IDS = [int(x.strip()) for x in owner_id_str.split(',') if x.strip().isdigit()]
+    OWNER_ID = OWNER_IDS[0] if OWNER_IDS else int(default_owner_id)
+else:
+    OWNER_ID = int(owner_id_str) if owner_id_str.isdigit() else int(default_owner_id)
+    OWNER_IDS = [OWNER_ID]
+
+print(f"👑 Dorothy Owner ID loaded: {OWNER_ID}")
+print(f"👑 All Owner IDs: {OWNER_IDS}")
+
 # NVIDIA API config - load from env
 NVIDIA_API_KEY = os.getenv('NVIDIA_API_KEY', '')  # Load from env, don't hardcode!
 NVIDIA_API_URL = "https://integrate.api.nvidia.com/v1/chat/completions"
@@ -268,12 +283,11 @@ def format_duration(minutes: int) -> str:
         return f"{days} ngày"
 
 def has_mod_permissions():
-    async def predicate(ctx):
-        # Check if user is server owner, has manage messages permission, or is bot owner
+    def predicate(ctx):
         return (ctx.author == ctx.guild.owner or 
                 ctx.author.guild_permissions.manage_messages or 
                 ctx.author.guild_permissions.administrator or
-                ctx.author.id == OWNER_ID)
+                ctx.author.id in OWNER_IDS)
     return commands.check(predicate)
 
 async def log_moderation_action(ctx, action: str, target: discord.Member, reason: str = None):
