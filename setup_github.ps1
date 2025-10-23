@@ -42,13 +42,13 @@ if (-not $gitUser -or -not $gitEmail) {
     Write-Host "`nPlease enter your Git configuration:" -ForegroundColor Yellow
     
     if (-not $gitUser) {
-        $userName = Read-Host "Enter your name (e.g., John Doe)"
-        git config user.name "$userName"
+        git config user.name "yukkisensei"
+        Write-Host "📧 Git user set to: yukkisensei" -ForegroundColor Green
     }
     
     if (-not $gitEmail) {
-        $userEmail = Read-Host "Enter your email (GitHub email)"
-        git config user.email "$userEmail"
+        git config user.email "nht3m7trator@icloud.com"
+        Write-Host "📧 Git email set to: nht3m7trator@icloud.com" -ForegroundColor Green
     }
     
     Write-Host "✅ Git configured" -ForegroundColor Green
