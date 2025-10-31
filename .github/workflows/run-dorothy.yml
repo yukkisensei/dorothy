@@ -1,0 +1,300 @@
+# GitHub Actions workflow to run Dorothy bot on Windows runner
+name: Run Dorothy Bot
+
+on:
+  # Run on push to main branch
+  push:
+    branches: [ main ]
+  
+  # Allow manual trigger from Actions tab
+  workflow_dispatch:
+  
+  # Schedule to run every 6 hours to prevent timeout
+  schedule:
+    - cron: '0 */6 * * *'
+
+jobs:
+  run-dorothy:
+    # Use Windows runner
+    runs-on: windows-latest
+    
+    # Set timeout to maximum allowed (6 hours)
+    timeout-minutes: 360
+    
+    steps:
+      # Notify: Workflow Started
+      - name: Discord notification - Started
+        run: |
+          $payload = @{
+            embeds = @(
+              @{
+                title = "🚀 Dorothy Bot Workflow Started"
+                description = "GitHub Actions workflow đang khởi động Dorothy bot..."
+                color = 3447003
+                fields = @(
+                  @{
+                    name = "Repository"
+                    value = "${{ github.repository }}"
+                    inline = $true
+                  }
+                  @{
+                    name = "Branch"
+                    value = "${{ github.ref_name }}"
+                    inline = $true
+                  }
+                  @{
+                    name = "Triggered by"
+                    value = "${{ github.actor }}"
+                    inline = $true
+                  }
+                  @{
+                    name = "Bot"
+                    value = "Dorothy (DoSecurity)"
+                    inline = $false
+                  }
+                )
+                timestamp = (Get-Date).ToUniversalTime().ToString("yyyy-MM-ddTHH:mm:ss.fffZ")
+                footer = @{
+                  text = "GitHub Actions"
+                }
+              }
+            )
+          } | ConvertTo-Json -Depth 10
+          
+          Invoke-RestMethod -Uri "${{ secrets.DISCORD_WEBHOOK_URL }}" -Method Post -Body $payload -ContentType "application/json"
+        shell: pwsh
+        continue-on-error: true
+      
+      # Step 1: Checkout repository code
+      - name: Checkout code
+        uses: actions/checkout@v4
+      
+      # Step 2: Set up Python 3.12.10 specifically
+      - name: Set up Python 3.12.10
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12.10'
+          
+      # Step 3: Cache Python dependencies for faster builds
+      - name: Cache pip packages
+        uses: actions/cache@v4
+        with:
+          path: ~\AppData\Local\pip\Cache
+          key: ${{ runner.os }}-pip-dorothy-${{ hashFiles('requirements.txt') }}
+          restore-keys: |
+            ${{ runner.os }}-pip-dorothy-
+            ${{ runner.os }}-pip-
+      
+      # Step 4: Install Python dependencies
+      - name: Install Python dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+        shell: pwsh
+      
+      # Step 5: Set up environment variables from GitHub Secrets
+      - name: Set up environment
+        run: |
+          # Create .env file from secrets
+          @"
+          DISCORD_BOT_TOKEN=${{ secrets.DISCORD_BOT_TOKEN }}
+          OWNER_ID=${{ secrets.BOT_OWNER_IDS }}
+          NVIDIA_API_KEY=${{ secrets.NVIDIA_API_KEY }}
+          "@ | Out-File -FilePath ".env" -Encoding utf8
+        shell: pwsh
+      
+      # Notify: Bot is Running
+      - name: Discord notification - Bot Running
+        run: |
+          $payload = @{
+            embeds = @(
+              @{
+                title = "✅ Dorothy Bot Đang Chạy"
+                description = "Dorothy bot đã khởi động thành công và đang hoạt động!"
+                color = 5763719
+                fields = @(
+                  @{
+                    name = "Status"
+                    value = "🟢 Online"
+                    inline = $true
+                  }
+                  @{
+                    name = "Python Version"
+                    value = "3.12.10"
+                    inline = $true
+                  }
+                  @{
+                    name = "Bot Type"
+                    value = "DoSecurity (Moderation)"
+                    inline = $false
+                  }
+                )
+                timestamp = (Get-Date).ToUniversalTime().ToString("yyyy-MM-ddTHH:mm:ss.fffZ")
+              }
+            )
+          } | ConvertTo-Json -Depth 10
+          
+          Invoke-RestMethod -Uri "${{ secrets.DISCORD_WEBHOOK_URL }}" -Method Post -Body $payload -ContentType "application/json"
+        shell: pwsh
+        continue-on-error: true
+      
+      # Step 6: Run Dorothy bot with auto-restart before timeout
+      - name: Run Dorothy Bot with Timer
+        env:
+          PYTHONUNBUFFERED: 1
+          PYTHONIOENCODING: utf-8
+          PYTHONUTF8: 1
+        run: |
+          Write-Host "Starting Dorothy bot with 359-minute timer..." -ForegroundColor Green
+          
+          # Set console to UTF-8
+          [Console]::OutputEncoding = [System.Text.Encoding]::UTF8
+          $env:PYTHONIOENCODING = "utf-8"
+          
+          # Start bot as background job
+          $botProcess = Start-Process -FilePath "python" -ArgumentList "dosecurity.py" -PassThru -NoNewWindow
+          
+          # Run for 359 minutes (5 hours 59 minutes)
+          $endTime = (Get-Date).AddMinutes(359)
+          
+          while ((Get-Date) -lt $endTime -and !$botProcess.HasExited) {
+            Start-Sleep -Seconds 30
+          }
+          
+          # Stop bot gracefully
+          if (!$botProcess.HasExited) {
+            Write-Host "Stopping Dorothy bot before 6-hour timeout..." -ForegroundColor Yellow
+            Stop-Process -Id $botProcess.Id -Force
+            Write-Host "👍 Dorothy bot configuration:" -ForegroundColor Cyan
+            Write-Host "   Token: [HIDDEN]" -ForegroundColor Gray
+            Write-Host "   Owner ID: ${{ secrets.BOT_OWNER_IDS }}" -ForegroundColor Green
+          }
+          
+          Write-Host "Dorothy bot session completed after 359 minutes" -ForegroundColor Green
+        shell: pwsh
+        
+      # Step 7: Trigger next workflow run
+      - name: Trigger Next Dorothy Workflow
+        if: success()
+        run: |
+          $headers = @{
+            "Authorization" = "Bearer ${{ secrets.GITHUB_TOKEN }}"
+            "Accept" = "application/vnd.github.v3+json"
+          }
+          
+          $body = @{
+            "ref" = "main"
+          } | ConvertTo-Json
+          
+          try {
+            Invoke-RestMethod -Method Post -Uri "https://api.github.com/repos/${{ github.repository }}/actions/workflows/run-dorothy.yml/dispatches" -Headers $headers -Body $body -ContentType "application/json"
+            Write-Host "✅ Successfully triggered next Dorothy workflow run" -ForegroundColor Green
+          } catch {
+            Write-Host "⚠️ Could not trigger next Dorothy workflow: $_" -ForegroundColor Yellow
+          }
+        shell: pwsh
+      
+      # Step 8: Upload logs on failure (optional)
+      - name: Upload logs on failure
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: dorothy-bot-logs
+          path: |
+            *.log
+            *.txt
+          retention-days: 7
+      
+      # Notify: Success
+      - name: Discord notification - Success
+        if: success()
+        run: |
+          $payload = @{
+            embeds = @(
+              @{
+                title = "🎉 Dorothy Bot Workflow Hoàn Thành"
+                description = "Dorothy bot đã chạy thành công và hoàn thành workflow!"
+                color = 5763719
+                fields = @(
+                  @{
+                    name = "Status"
+                    value = "✅ Completed"
+                    inline = $true
+                  }
+                  @{
+                    name = "Duration"
+                    value = "~6 hours (max)"
+                    inline = $true
+                  }
+                )
+                timestamp = (Get-Date).ToUniversalTime().ToString("yyyy-MM-ddTHH:mm:ss.fffZ")
+                footer = @{
+                  text = "Workflow completed successfully"
+                }
+              }
+            )
+          } | ConvertTo-Json -Depth 10
+          
+          Invoke-RestMethod -Uri "${{ secrets.DISCORD_WEBHOOK_URL }}" -Method Post -Body $payload -ContentType "application/json"
+        shell: pwsh
+        continue-on-error: true
+      
+      # Notify: Failure
+      - name: Discord notification - Failure
+        if: failure()
+        run: |
+          $payload = @{
+            embeds = @(
+              @{
+                title = "❌ Dorothy Bot Workflow Thất Bại"
+                description = "Có lỗi xảy ra trong quá trình chạy Dorothy bot!"
+                color = 15158332
+                fields = @(
+                  @{
+                    name = "Status"
+                    value = "🔴 Failed"
+                    inline = $true
+                  }
+                  @{
+                    name = "Action"
+                    value = "[View Logs](${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }})"
+                    inline = $true
+                  }
+                )
+                timestamp = (Get-Date).ToUniversalTime().ToString("yyyy-MM-ddTHH:mm:ss.fffZ")
+                footer = @{
+                  text = "Check logs for details"
+                }
+              }
+            )
+          } | ConvertTo-Json -Depth 10
+          
+          Invoke-RestMethod -Uri "${{ secrets.DISCORD_WEBHOOK_URL }}" -Method Post -Body $payload -ContentType "application/json"
+        shell: pwsh
+        continue-on-error: true
+      
+      # Notify: Cancelled
+      - name: Discord notification - Cancelled
+        if: cancelled()
+        run: |
+          $payload = @{
+            embeds = @(
+              @{
+                title = "⚠️ Dorothy Bot Workflow Bị Hủy"
+                description = "Workflow đã bị hủy bởi người dùng hoặc hệ thống."
+                color = 16776960
+                fields = @(
+                  @{
+                    name = "Status"
+                    value = "🟡 Cancelled"
+                    inline = $true
+                  }
+                )
+                timestamp = (Get-Date).ToUniversalTime().ToString("yyyy-MM-ddTHH:mm:ss.fffZ")
+              }
+            )
+          } | ConvertTo-Json -Depth 10
+          
+          Invoke-RestMethod -Uri "${{ secrets.DISCORD_WEBHOOK_URL }}" -Method Post -Body $payload -ContentType "application/json"
+        shell: pwsh
+        continue-on-error: true
