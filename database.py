@@ -23,11 +23,29 @@ class DataManager:
         if os.path.exists(self.filename):
             try:
                 with open(self.filename, 'r', encoding='utf-8') as f:
-                    return json.load(f)
+                    data = json.load(f)
+                    # Migrate old data to new structure
+                    data = self._migrate_data(data)
+                    return data
             except Exception as e:
                 print(f"Error loading data: {e}")
                 return self._get_default_structure()
         return self._get_default_structure()
+    
+    def _migrate_data(self, data: Dict) -> Dict:
+        """Migrate old data structure to new version"""
+        # Add missing fields from new structure
+        default = self._get_default_structure()
+        
+        # Add command_spam_tracking if missing
+        if "command_spam_tracking" not in data:
+            data["command_spam_tracking"] = {}
+        
+        # Add dm_blocked_users if missing
+        if "dm_blocked_users" not in data:
+            data["dm_blocked_users"] = {}
+        
+        return data
     
     def _get_default_structure(self) -> Dict:
         """Return default data structure"""
