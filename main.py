@@ -39,12 +39,13 @@ from discord.ext import commands
 from dotenv import load_dotenv
 
 # Import modules
-from config import PREFIX, OWNER_IDS, BOT_NAME, VERSION
+from config import PREFIX, OWNER_IDS, BOT_NAME, VERSION, DISCORD_BOT_TOKEN
 from database import DataManager
 from security import SecurityManager
 import moderation
 import info_commands
 import security_commands
+import doro_ai
 import events
 
 # ==================== BOT INITIALIZATION ====================
@@ -81,15 +82,16 @@ def setup_bot():
     moderation.setup_moderation(data_manager)
     moderation.setup_commands(bot)
     
-    # Setup info commands module
-    info_commands.setup_info(data_manager)
-    info_commands.setup_commands(bot)
+    # Initialize modules
+    config.init_config()
+    database.init_database(data_manager)
+    security.init_security(data_manager)
+    moderation.init_moderation(data_manager)
+    utils.init_utils(data_manager)
+    info_commands.init_info_commands(data_manager)
+    security_commands.init_security_commands(data_manager)
+    doro_ai.init_doro_ai()
     
-    # Setup security commands module
-    security_commands.setup_security_commands(data_manager)
-    security_commands.setup_commands(bot)
-    
-    # Setup events module
     events.setup_events(bot, data_manager, security_manager)
     
     try:

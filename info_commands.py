@@ -10,7 +10,7 @@ from typing import Optional
 from discord.ext import commands
 from database import DataManager
 from utils import has_mod_permissions
-from config import BOT_NAME, VERSION, PREFIX
+from config import BOT_NAME, VERSION, VERSION, PREFIX, OWNER_IDS
 
 # Global data manager reference
 data_manager: Optional[DataManager] = None
@@ -75,6 +75,58 @@ def setup_commands(bot: commands.Bot):
         
         embed.set_footer(text=get_text(guild_id, "help_footer", prefix=current_prefix))
         await ctx.send(embed=embed)
+    
+    @bot.command(name='dmblocklist', aliases=['dmbl'])
+    async def dm_blocklist(ctx):
+        """Show list of DM blocked users (Owner only)"""
+        if ctx.author.id not in OWNER_IDS:
+            return await ctx.send("❌ This command is owner-only!")
+        
+        blocked_users = data_manager.data.get("dm_blocked_users", {})
+        
+        if not blocked_users:
+            return await ctx.send("✅ No users are currently blocked from DMing the bot!")
+        
+        embed = discord.Embed(
+            title="🚫 DM Blocked Users",
+            description=f"Total: {len(blocked_users)} users",
+            color=discord.Color.red()
+        )
+        
+        for user_id, info in list(blocked_users.items())[:10]:
+            try:
+                user = await bot.fetch_user(int(user_id))
+                user_name = f"{user.name}#{user.discriminator if user.discriminator != '0' else ''}"
+            except:
+                user_name = f"Unknown User ({user_id})"
+            
+            embed.add_field(
+                name=user_name,
+                value=f"Reason: {info.get('reason', 'Unknown')}\nBlocked: {info.get('timestamp', 'Unknown')[:10]}",
+                inline=False
+            )
+        
+        if len(blocked_users) > 10:
+            embed.set_footer(text=f"... and {len(blocked_users) - 10} more users")
+        
+        await ctx.send(embed=embed)
+    
+    @bot.command(name='dmunblock', aliases=['dmub'])
+    async def dm_unblock(ctx, user_id: str):
+        """Unblock a user from DMing the bot (Owner only)"""
+        if ctx.author.id not in OWNER_IDS:
+            return await ctx.send("❌ This command is owner-only!")
+        
+        if not data_manager.is_dm_blocked(user_id):
+            return await ctx.send(f"❌ User `{user_id}` is not blocked!")
+        
+        data_manager.unblock_dm_user(user_id)
+        
+        try:
+            user = await bot.fetch_user(int(user_id))
+            await ctx.send(f"✅ Unblocked {user.mention} from DMing Dorothy!")
+        except:
+            await ctx.send(f"✅ Unblocked user `{user_id}` from DMing Dorothy!")
 
     @bot.command(name='serverinfo', aliases=['server'])
     async def server_info(ctx):

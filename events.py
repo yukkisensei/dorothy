@@ -57,6 +57,42 @@ def setup_events(bot_instance: commands.Bot, dm: DataManager, sm: SecurityManage
         if message.author == bot.user:
             return
         
+        # Check DM spam
+        if not message.guild:  # DM message
+            user_id = str(message.author.id)
+            
+            # Check if user is blocked
+            if data_manager.is_dm_blocked(user_id):
+                return  # Ignore silently
+            
+            # Track DM
+            from config import DM_SPAM_THRESHOLD, DM_SPAM_WINDOW
+            dm_history = data_manager.track_message("0", user_id, message.content)
+            
+            # Check DM spam
+            from datetime import datetime, timedelta
+            now = datetime.now()
+            window_start = now - timedelta(seconds=DM_SPAM_WINDOW)
+            
+            dm_count = 0
+            for msg in dm_history:
+                msg_time = datetime.fromisoformat(msg["timestamp"])
+                if msg_time >= window_start:
+                    dm_count += 1
+            
+            if dm_count >= DM_SPAM_THRESHOLD:
+                # Block user permanently
+                data_manager.block_dm_user(user_id, "DM Spam")
+                try:
+                    await message.author.send(
+                        "⛔ **You have been blocked from DMing Dorothy**\n"
+                        "Reason: Spam detected\n"
+                        "\"Chúng ta không thuộc về nhau\" 💔"
+                    )
+                except:
+                    pass
+                return
+        
         # Check if bot is mentioned
         if bot.user.mentioned_in(message) and not message.mention_everyone:
             if bot.user in message.mentions:
@@ -102,6 +138,44 @@ def setup_events(bot_instance: commands.Bot, dm: DataManager, sm: SecurityManage
                 )
                 return
         
+        # Check command spam before processing
+        if message.content.startswith(data_manager.get_prefix(message.guild.id) if message.guild else '-'):
+            from config import COMMAND_SPAM_THRESHOLD, COMMAND_SPAM_WINDOW
+            from datetime import datetime, timedelta
+            
+            user_id = str(message.author.id)
+            command_name = message.content.split()[0] if message.content.split() else ""
+            
+            # Track command
+            cmd_history = data_manager.track_command(user_id, command_name)
+            
+            # Check command spam
+            now = datetime.now()
+            window_start = now - timedelta(seconds=COMMAND_SPAM_WINDOW)
+            
+            cmd_count = 0
+            for cmd in cmd_history:
+                cmd_time = datetime.fromisoformat(cmd["timestamp"])
+                if cmd_time >= window_start:
+                    cmd_count += 1
+            
+            if cmd_count >= COMMAND_SPAM_THRESHOLD:
+                # Mute 7 days for command spam
+                if message.guild:
+                    try:
+                        from datetime import timedelta
+                        mute_duration = timedelta(days=7)
+                        await message.author.timeout(mute_duration, reason="[AUTO] Command Spam")
+                        await message.channel.send(
+                            f"🚨 {message.author.mention} đã bị mute 7 ngày do spam commands!\n"
+                            f"\"Chúng ta không thuộc về nhau\" 💔"
+                        )
+                        data_manager.clear_command_tracking(user_id)
+                    except:
+                        pass
+                return
+        
+        # Process commands
         await bot.process_commands(message)
     
     @bot.event
@@ -244,9 +318,46 @@ def setup_events(bot_instance: commands.Bot, dm: DataManager, sm: SecurityManage
             activity=activity
         )
     
+    # Command spam check decorator for slash commands
+    async def check_slash_spam(interaction: discord.Interaction) -> bool:
+        """Check if user is spamming slash commands"""
+        from config import COMMAND_SPAM_THRESHOLD, COMMAND_SPAM_WINDOW
+        from datetime import datetime, timedelta
+        
+        user_id = str(interaction.user.id)
+        command_name = f"/{interaction.command.name}"
+        
+        # Track command
+        cmd_history = data_manager.track_command(user_id, command_name)
+        
+        # Check command spam
+        now = datetime.now()
+        window_start = now - timedelta(seconds=COMMAND_SPAM_WINDOW)
+        
+        cmd_count = sum(1 for cmd in cmd_history if datetime.fromisoformat(cmd["timestamp"]) >= window_start)
+        
+        if cmd_count >= COMMAND_SPAM_THRESHOLD:
+            # Mute 7 days for command spam
+            if interaction.guild:
+                try:
+                    mute_duration = timedelta(days=7)
+                    await interaction.user.timeout(mute_duration, reason="[AUTO] Slash Command Spam")
+                    await interaction.response.send_message(
+                        f"🚨 Bạn đã bị mute 7 ngày do spam commands!\n"
+                        f"\"Chúng ta không thuộc về nhau\" 💔",
+                        ephemeral=True
+                    )
+                    data_manager.clear_command_tracking(user_id)
+                    return True
+                except:
+                    pass
+        return False
+    
     # Slash commands
     @bot.tree.command(name="help", description="Show help menu / Hiển thị menu trợ giúp")
     async def slash_help(interaction: discord.Interaction):
+        if await check_slash_spam(interaction):
+            return
         from localization import get_text
         guild_id = str(interaction.guild.id) if interaction.guild else "0"
         
@@ -271,6 +382,8 @@ def setup_events(bot_instance: commands.Bot, dm: DataManager, sm: SecurityManage
         discord.app_commands.Choice(name="🇻🇳 Tiếng Việt", value="vi")
     ])
     async def set_language(interaction: discord.Interaction, language: discord.app_commands.Choice[str]):
+        if await check_slash_spam(interaction):
+            return
         from localization import get_text, get_language_name
         from config import OWNER_IDS
         

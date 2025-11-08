@@ -50,7 +50,9 @@ class DataManager:
             },
             "spam_tracking": {},
             "raid_tracking": {},
-            "nuke_tracking": {}
+            "nuke_tracking": {},
+            "dm_blocked_users": {},
+            "command_spam_tracking": {}
         }
     
     def save_data(self):
@@ -290,3 +292,52 @@ class DataManager:
         """Get language for server (default: en)"""
         guild_id = str(guild_id)
         return self.data["languages"].get(guild_id, "en")
+    
+    # ==================== DM BLOCK SYSTEM ====================
+    def block_dm_user(self, user_id: str, reason: str = "DM Spam"):
+        """Block user from DMing bot"""
+        user_id = str(user_id)
+        self.data["dm_blocked_users"][user_id] = {
+            "timestamp": datetime.now().isoformat(),
+            "reason": reason
+        }
+        self.save_data()
+    
+    def is_dm_blocked(self, user_id: str) -> bool:
+        """Check if user is blocked from DMing bot"""
+        user_id = str(user_id)
+        return user_id in self.data["dm_blocked_users"]
+    
+    def unblock_dm_user(self, user_id: str):
+        """Unblock user from DMing bot"""
+        user_id = str(user_id)
+        if user_id in self.data["dm_blocked_users"]:
+            del self.data["dm_blocked_users"][user_id]
+            self.save_data()
+    
+    # ==================== COMMAND SPAM TRACKING ====================
+    def track_command(self, user_id: str, command_name: str) -> List[Dict]:
+        """Track user command for spam detection"""
+        user_id = str(user_id)
+        
+        if user_id not in self.data["command_spam_tracking"]:
+            self.data["command_spam_tracking"][user_id] = []
+        
+        command_data = {
+            "command": command_name,
+            "timestamp": datetime.now().isoformat()
+        }
+        
+        self.data["command_spam_tracking"][user_id].append(command_data)
+        
+        # Keep only last 10 commands
+        self.data["command_spam_tracking"][user_id] = \
+            self.data["command_spam_tracking"][user_id][-10:]
+        
+        return self.data["command_spam_tracking"][user_id]
+    
+    def clear_command_tracking(self, user_id: str):
+        """Clear command tracking for user"""
+        user_id = str(user_id)
+        if user_id in self.data["command_spam_tracking"]:
+            del self.data["command_spam_tracking"][user_id]

@@ -75,10 +75,18 @@ RAID_DETECTION_WINDOW = 10  # Seconds
 RAID_MIN_ACCOUNT_AGE = 7  # Days
 
 # Anti-Spam Settings
-SPAM_MESSAGE_THRESHOLD = 5  # Messages in time window
-SPAM_TIME_WINDOW = 5  # Seconds
-SPAM_MENTION_THRESHOLD = 5  # Mentions in one message
+SPAM_MESSAGE_THRESHOLD = 5  # Messages within time window
+SPAM_TIME_WINDOW = 10  # Seconds
+SPAM_MENTION_THRESHOLD = 5  # Max mentions per message
 SPAM_DUPLICATE_THRESHOLD = 3  # Same message repeated
+
+# Command Spam Settings
+COMMAND_SPAM_THRESHOLD = 5  # Commands within time window
+COMMAND_SPAM_WINDOW = 10  # Seconds
+
+# DM Spam Settings
+DM_SPAM_THRESHOLD = 5  # DMs within time window
+DM_SPAM_WINDOW = 30  # Seconds
 
 # Anti-Nuke Settings
 NUKE_BAN_THRESHOLD = 3  # Multiple bans in short time
