@@ -33,7 +33,6 @@ jobs:
         DISCORD_BOT_TOKEN: ${{ secrets.DISCORD_BOT_TOKEN }}
         OWNER_ID: ${{ secrets.OWNER_ID }}
         NVIDIA_API_KEY: ${{ secrets.NVIDIA_API_KEY }}
-        DISCORD_WEBHOOK_SECURITY_URL: ${{ secrets.DISCORD_WEBHOOK_SECURITY_URL }}
       run: |
         while true; do
           echo "Starting Dorothy Bot..."
