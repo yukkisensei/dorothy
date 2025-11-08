@@ -14,6 +14,9 @@ class DataManager:
     def __init__(self, filename="dorothy_data.json"):
         self.filename = filename
         self.data = self.load_data()
+        # Create initial save if file doesn't exist
+        if not os.path.exists(self.filename):
+            self.save_data()
     
     def load_data(self) -> Dict:
         """Load data from JSON file"""
