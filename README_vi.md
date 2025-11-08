@@ -302,4 +302,4 @@ Tất cả dữ liệu được lưu trong `dorothy_data.json`:
 Bot được cung cấp để sử dụng cá nhân và thương mại. Thoải mái chỉnh sửa và phân phối.
 
 ---
-*Dorothy - Bot Bảo mật & Kiểm duyệt Discord Nâng cao v3.0*
+*Dorothy - Bot Bảo mật & Kiểm duyệt Discord Nâng cao v3.2*

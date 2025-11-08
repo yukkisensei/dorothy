@@ -311,4 +311,4 @@ All data is stored in `dorothy_data.json`:
 This bot is provided as-is for personal and commercial use. Modify and distribute freely.
 
 ---
-*Dorothy - Advanced Discord Security & Moderation Bot v3.0*
+*Dorothy - Advanced Discord Security & Moderation Bot v3.2*

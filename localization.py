@@ -90,7 +90,7 @@ TRANSLATIONS = {
         "help_utility_desc": "`-clear [amount]` - Delete messages\n`-lock [#channel]` - Lock channel\n`-unlock [#channel]` - Unlock channel\n`-slowmode [seconds]` - Set slowmode",
         "help_info": "📊 **Information**",
         "help_info_desc": "`-serverinfo` - Server info\n`-userinfo [@user]` - User info\n`-ping` - Check latency\n`-setprefix <prefix>` - Change prefix",
-        "help_footer": "Dorothy v3.0 | Prefix: {prefix}",
+        "help_footer": "Dorothy v3.2 | Prefix: {prefix}",
         
         # Server info
         "serverinfo_title": "📊 Information for {name}",
@@ -276,7 +276,7 @@ TRANSLATIONS = {
         "help_utility_desc": "`-clear [số]` - Xóa tin nhắn\n`-lock [#kênh]` - Khóa kênh\n`-unlock [#kênh]` - Mở khóa kênh\n`-slowmode [giây]` - Đặt slowmode",
         "help_info": "📊 **Thông tin**",
         "help_info_desc": "`-serverinfo` - Thông tin server\n`-userinfo [@user]` - Thông tin user\n`-ping` - Kiểm tra độ trễ\n`-setprefix <prefix>` - Đổi prefix",
-        "help_footer": "Dorothy v3.0 | Prefix: {prefix}",
+        "help_footer": "Dorothy v3.2 | Prefix: {prefix}",
         
         # Server info
         "serverinfo_title": "📊 Thông tin {name}",
