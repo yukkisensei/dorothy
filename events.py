@@ -160,15 +160,14 @@ def setup_events(bot_instance: commands.Bot, dm: DataManager, sm: SecurityManage
                     cmd_count += 1
             
             if cmd_count >= COMMAND_SPAM_THRESHOLD:
-                # Mute 7 days for command spam
+                # Mute 7 days for command spam (KHÔNG BLOCK, chỉ mute trong server)
                 if message.guild:
                     try:
                         from datetime import timedelta
                         mute_duration = timedelta(days=7)
                         await message.author.timeout(mute_duration, reason="[AUTO] Command Spam")
                         await message.channel.send(
-                            f"🚨 {message.author.mention} đã bị mute 7 ngày do spam commands!\n"
-                            f"\"Chúng ta không thuộc về nhau\" 💔"
+                            f"🚨 {message.author.mention} đã bị mute 7 ngày do spam commands!"
                         )
                         data_manager.clear_command_tracking(user_id)
                     except:
@@ -337,14 +336,13 @@ def setup_events(bot_instance: commands.Bot, dm: DataManager, sm: SecurityManage
         cmd_count = sum(1 for cmd in cmd_history if datetime.fromisoformat(cmd["timestamp"]) >= window_start)
         
         if cmd_count >= COMMAND_SPAM_THRESHOLD:
-            # Mute 7 days for command spam
+            # Mute 7 days for slash command spam (KHÔNG BLOCK, chỉ mute trong server)
             if interaction.guild:
                 try:
                     mute_duration = timedelta(days=7)
                     await interaction.user.timeout(mute_duration, reason="[AUTO] Slash Command Spam")
                     await interaction.response.send_message(
-                        f"🚨 Bạn đã bị mute 7 ngày do spam commands!\n"
-                        f"\"Chúng ta không thuộc về nhau\" 💔",
+                        f"🚨 Bạn đã bị mute 7 ngày do spam commands!",
                         ephemeral=True
                     )
                     data_manager.clear_command_tracking(user_id)
