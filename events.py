@@ -217,14 +217,17 @@ def setup_events(bot_instance: commands.Bot, dm: DataManager, sm: SecurityManage
     @bot.event
     async def on_command_error(ctx, error):
         """Handle command errors"""
+        from localization import get_text
+        guild_id = str(ctx.guild.id) if ctx.guild else "0"
+        
         if isinstance(error, commands.MissingRequiredArgument):
-            await ctx.send(f"❌ Thiếu tham số! Sử dụng: `{ctx.prefix}help` để xem hướng dẫn.")
+            await ctx.send(get_text(guild_id, "error_missing_args", prefix=ctx.prefix))
         elif isinstance(error, commands.MemberNotFound):
-            await ctx.send("❌ Không tìm thấy thành viên này!")
+            await ctx.send(get_text(guild_id, "error_member_not_found"))
         elif isinstance(error, commands.CheckFailure):
-            await ctx.send("❌ Bạn không có quyền sử dụng lệnh này!")
+            await ctx.send(get_text(guild_id, "error_no_permission"))
         elif isinstance(error, commands.CommandNotFound):
-            pass  # Ignore command not found errors
+            pass
         else:
             print(f"Error: {error}")
     
@@ -242,39 +245,48 @@ def setup_events(bot_instance: commands.Bot, dm: DataManager, sm: SecurityManage
         )
     
     # Slash commands
-    @bot.tree.command(name="help", description="Hiển thị menu trợ giúp")
+    @bot.tree.command(name="help", description="Show help menu / Hiển thị menu trợ giúp")
     async def slash_help(interaction: discord.Interaction):
         from localization import get_text
         guild_id = str(interaction.guild.id) if interaction.guild else "0"
         
         embed = discord.Embed(
-            title=f"🛡️ {BOT_NAME} - {get_text(guild_id, 'help_title').split('-')[1].strip()}",
+            title=get_text(guild_id, 'help_title'),
             description=get_text(guild_id, 'help_description'),
             color=discord.Color.blue()
         )
-        embed.add_field(name="📋 Danh sách lệnh", value="Gõ `-help` trong chat để xem chi tiết", inline=False)
+        
+        if data_manager.get_language(guild_id) == "vi":
+            cmd_text = "Gõ `-help` trong chat để xem chi tiết"
+        else:
+            cmd_text = "Type `-help` in chat for details"
+        
+        embed.add_field(name="📋 Commands / Lệnh", value=cmd_text, inline=False)
         await interaction.response.send_message(embed=embed, ephemeral=True)
     
     @bot.tree.command(name="setlanguage", description="Change bot language / Đổi ngôn ngữ bot")
     @discord.app_commands.describe(language="Choose language / Chọn ngôn ngữ")
     @discord.app_commands.choices(language=[
-        discord.app_commands.Choice(name="English", value="en"),
-        discord.app_commands.Choice(name="Tiếng Việt", value="vi")
+        discord.app_commands.Choice(name="🇬🇧 English", value="en"),
+        discord.app_commands.Choice(name="🇻🇳 Tiếng Việt", value="vi")
     ])
     async def set_language(interaction: discord.Interaction, language: discord.app_commands.Choice[str]):
         from localization import get_text, get_language_name
+        from config import OWNER_IDS
         
         # Check if user is admin
+        owner_ids = OWNER_IDS if OWNER_IDS else []
         if not (interaction.user.guild_permissions.administrator or 
-                interaction.user.id in [interaction.guild.owner_id] + 
-                (list(map(int, os.getenv('BOT_OWNER_IDS', '').split(','))) if os.getenv('BOT_OWNER_IDS') else [])):
+                interaction.user.id == interaction.guild.owner_id or
+                interaction.user.id in owner_ids):
             await interaction.response.send_message(
-                "❌ Only administrators can change the language!\n❌ Chỉ quản trị viên mới có thể đổi ngôn ngữ!",
+                "❌ **English:** Only administrators can change the language!\n"
+                "❌ **Tiếng Việt:** Chỉ quản trị viên mới có thể đổi ngôn ngữ!",
                 ephemeral=True
             )
             return
         
-        # Set language
+        # Set language FIRST, then get text in new language
         guild_id = str(interaction.guild.id)
         data_manager.set_language(guild_id, language.value)
         
