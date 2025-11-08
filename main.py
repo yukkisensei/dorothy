@@ -89,7 +89,7 @@ def setup_bot():
     info_commands.setup_info(data_manager)
     info_commands.setup_commands(bot)
     
-    security_commands.init_security_commands(data_manager)
+    security_commands.setup_security_commands(data_manager)
     security_commands.setup_commands(bot)
     
     # Setup events
