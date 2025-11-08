@@ -1,0 +1,57 @@
+name: Dorothy Bot Auto-Run
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [ main ]
+
+jobs:
+  run-bot:
+    runs-on: ubuntu-latest
+    timeout-minutes: 360
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v3
+    
+    - name: Set up Python 3.12
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.12'
+    
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install -r requirements.txt
+    
+    - name: Run Dorothy Bot with auto-restart on error
+      env:
+        DISCORD_BOT_TOKEN: ${{ secrets.DISCORD_BOT_TOKEN }}
+        OWNER_ID: ${{ secrets.OWNER_ID }}
+        NVIDIA_API_KEY: ${{ secrets.NVIDIA_API_KEY }}
+      run: |
+        while true; do
+          echo "Starting Dorothy Bot..."
+          python main.py
+          EXIT_CODE=$?
+          
+          if [ $EXIT_CODE -eq 0 ]; then
+            echo "Bot exited normally. Stopping..."
+            break
+          else
+            echo "Bot crashed with exit code $EXIT_CODE. Restarting in 10 seconds..."
+            sleep 10
+          fi
+        done
+    
+    - name: Re-trigger workflow on timeout or error
+      if: failure() || cancelled()
+      uses: actions/github-script@v6
+      with:
+        script: |
+          await github.rest.actions.createWorkflowDispatch({
+            owner: context.repo.owner,
+            repo: context.repo.repo,
+            workflow_id: 'dorothy-bot.yml',
+            ref: 'main'
+          })
