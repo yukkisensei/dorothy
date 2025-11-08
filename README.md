@@ -181,7 +181,16 @@ DISCORD_BOT_TOKEN=your_token_here
 OWNER_ID=your_discord_id
 BOT_OWNER_IDS=id1,id2,id3  # Multiple owners (optional)
 NVIDIA_API_KEY=your_nvidia_key  # Optional for AI features
+DISCORD_WEBHOOK_URL=your_status_webhook  # Bot status notifications
+DISCORD_WEBHOOK_SECURITY_URL=your_security_webhook  # Security alerts
 ```
+
+### GitHub Actions Secrets
+For deployment on GitHub Actions, add these secrets:
+- `DISCORD_BOT_TOKEN` - Your bot token
+- `OWNER_ID` - Your Discord user ID
+- `DISCORD_WEBHOOK_URL` - Webhook for bot status (started/stopped/error)
+- `DISCORD_WEBHOOK_SECURITY_URL` - Webhook for security alerts (spam/raid/nuke)
 
 ### Security Settings
 All security features are enabled by default and can be toggled per server:

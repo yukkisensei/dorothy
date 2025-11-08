@@ -24,11 +24,16 @@ jobs:
         python -m pip install --upgrade pip
         pip install -r requirements.txt
     
+    - name: Send start notification
+      run: |
+        curl -H "Content-Type: application/json" -d '{"embeds":[{"title":"✅ Dorothy Bot Started","description":"Bot is now running on GitHub Actions","color":65280,"timestamp":"'$(date -u +%Y-%m-%dT%H:%M:%S.000Z)'"}]}' ${{ secrets.DISCORD_WEBHOOK_URL }}
+    
     - name: Run Dorothy Bot with auto-restart on error
       env:
         DISCORD_BOT_TOKEN: ${{ secrets.DISCORD_BOT_TOKEN }}
         OWNER_ID: ${{ secrets.OWNER_ID }}
         NVIDIA_API_KEY: ${{ secrets.NVIDIA_API_KEY }}
+        DISCORD_WEBHOOK_SECURITY_URL: ${{ secrets.DISCORD_WEBHOOK_SECURITY_URL }}
       run: |
         while true; do
           echo "Starting Dorothy Bot..."
@@ -37,12 +42,19 @@ jobs:
           
           if [ $EXIT_CODE -eq 0 ]; then
             echo "Bot exited normally. Stopping..."
+            curl -H "Content-Type: application/json" -d '{"embeds":[{"title":"⚠️ Dorothy Bot Stopped","description":"Bot exited normally","color":16776960,"timestamp":"'$(date -u +%Y-%m-%dT%H:%M:%S.000Z)'"}]}' ${{ secrets.DISCORD_WEBHOOK_URL }}
             break
           else
             echo "Bot crashed with exit code $EXIT_CODE. Restarting in 10 seconds..."
+            curl -H "Content-Type: application/json" -d '{"embeds":[{"title":"🔄 Dorothy Bot Restarting","description":"Bot crashed with exit code '"$EXIT_CODE"'. Restarting in 10 seconds...","color":16744448,"timestamp":"'$(date -u +%Y-%m-%dT%H:%M:%S.000Z)'"}]}' ${{ secrets.DISCORD_WEBHOOK_URL }}
             sleep 10
           fi
         done
+    
+    - name: Send error notification
+      if: failure()
+      run: |
+        curl -H "Content-Type: application/json" -d '{"embeds":[{"title":"❌ Dorothy Bot Error","description":"Workflow failed or timed out. Retriggering...","color":16711680,"timestamp":"'$(date -u +%Y-%m-%dT%H:%M:%S.000Z)'"}]}' ${{ secrets.DISCORD_WEBHOOK_URL }}
     
     - name: Re-trigger workflow on timeout or error
       if: failure() || cancelled()

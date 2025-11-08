@@ -432,7 +432,45 @@ class SecurityManager:
     
     async def notify_highest_role(self, guild: discord.Guild, message: str):
         """Notify members with highest role about security event"""
+        import os
+        import aiohttp
+        
         try:
+            # Send to webhook first (if configured)
+            webhook_url = os.getenv('DISCORD_WEBHOOK_SECURITY_URL')
+            if webhook_url:
+                embed_data = {
+                    "embeds": [{
+                        "title": "🚨 Security Alert",
+                        "description": message,
+                        "color": 0xFF0000,  # Red
+                        "timestamp": datetime.now().isoformat(),
+                        "footer": {
+                            "text": f"Server: {guild.name}"
+                        }
+                    }]
+                }
+                try:
+                    async with aiohttp.ClientSession() as session:
+                        await session.post(webhook_url, json=embed_data)
+                except Exception as e:
+                    print(f"Failed to send webhook: {e}")
+            
+            # Also send to security-log channel (fallback)
+            security_channel = discord.utils.get(guild.text_channels, name="security-log")
+            if security_channel:
+                embed = discord.Embed(
+                    title="🚨 Security Alert",
+                    description=message,
+                    color=discord.Color.red(),
+                    timestamp=datetime.now()
+                )
+                embed.set_footer(text=f"Server: {guild.name}")
+                try:
+                    await security_channel.send(embed=embed)
+                except:
+                    pass
+            
             # Get the highest role (excluding @everyone and bot roles)
             highest_role = None
             for role in sorted(guild.roles, key=lambda r: r.position, reverse=True):
