@@ -82,18 +82,15 @@ def setup_bot():
     except UnicodeEncodeError:
         print("[INFO] Initializing modules...")
     
-    # Setup moderation module
+    # Setup all command modules
     moderation.setup_moderation(data_manager)
     moderation.setup_commands(bot)
     
-    # Initialize modules
-    database.init_database(data_manager)
-    security.init_security(data_manager)
-    moderation.init_moderation(data_manager)
-    utils.init_utils(data_manager)
-    info_commands.init_info_commands(data_manager)
+    info_commands.setup_info(data_manager)
+    info_commands.setup_commands(bot)
+    
     security_commands.init_security_commands(data_manager)
-    doro_ai.init_doro_ai()
+    security_commands.setup_commands(bot)
     
     # Setup events
     events.setup_events(bot, data_manager, security_manager)
