@@ -64,26 +64,45 @@ class SecurityManager:
         return None
     
     async def handle_raid_member(self, member: discord.Member, reason: str):
-        """Handle a member flagged as potential raider"""
+        """Handle a member flagged as potential raider - Mute 7 days and notify admins"""
+        from localization import get_text
+        from utils import send_dm_notification
+        from datetime import timedelta
+        
         try:
-            # Send DM before kicking
-            try:
-                embed = discord.Embed(
-                    title="🛡️ Anti-Raid Protection",
-                    description=f"You were automatically kicked from **{member.guild.name}**",
-                    color=discord.Color.red()
-                )
-                embed.add_field(name="Reason", value=reason, inline=False)
-                embed.add_field(name="Appeal", value="Contact server moderators if this was a mistake", inline=False)
-                await member.send(embed=embed)
-            except:
-                pass
+            guild_id = str(member.guild.id)
             
-            # Kick the member
-            await member.kick(reason=f"[AUTO] Raid Protection: {reason}")
+            # Auto-mute for 7 days instead of kick
+            try:
+                mute_duration = timedelta(days=7)
+                await member.timeout(mute_duration, reason=f"[AUTO] Raid Protection: {reason}")
+                
+                # Send DM to user
+                action_text = get_text(guild_id, "action_muted_7days")
+                extra_text = get_text(guild_id, "extra_raid_detected")
+                await send_dm_notification(
+                    member,
+                    action_text,
+                    f"[AUTO-RAID] {reason}",
+                    member.guild.name,
+                    extra_text,
+                    guild_id
+                )
+            except Exception as e:
+                print(f"Failed to mute raider: {e}")
+            
+            # Notify highest role members
+            await self.notify_highest_role(
+                member.guild,
+                f"🛡️ **Raid Detected**\n"
+                f"User: {member.mention} (`{member.id}`)\n"
+                f"Reason: {reason}\n"
+                f"Action: Auto-muted for 7 days"
+            )
+            
             return True
         except Exception as e:
-            print(f"Failed to kick raid member: {e}")
+            print(f"Failed to handle raid member: {e}")
             return False
     
     # ==================== ANTI-SPAM SYSTEM ====================
@@ -142,34 +161,61 @@ class SecurityManager:
         return None
     
     async def handle_spam(self, message: discord.Message, spam_info: Dict):
-        """Handle detected spam"""
+        """Handle detected spam - Auto mute 7 days and notify admins"""
+        from localization import get_text
+        from utils import send_dm_notification
+        from datetime import timedelta
+        
         try:
+            guild_id = str(message.guild.id)
+            
             # Delete the spam message
             await message.delete()
             
-            # Give automatic warning
-            from moderation import add_auto_warning
-            await add_auto_warning(
+            # Auto-mute for 7 days
+            try:
+                mute_duration = timedelta(days=7)
+                await message.author.timeout(mute_duration, reason=f"[AUTO-MOD] Spam detected: {spam_info['reason']}")
+                
+                # Send DM to user
+                action_text = get_text(guild_id, "action_muted_7days")
+                extra_text = get_text(guild_id, "extra_spam_detected")
+                await send_dm_notification(
+                    message.author,
+                    action_text,
+                    f"[AUTO-MOD] Spam: {spam_info['reason']}",
+                    message.guild.name,
+                    extra_text,
+                    guild_id
+                )
+            except Exception as e:
+                print(f"Failed to mute spammer: {e}")
+            
+            # Notify highest role members
+            await self.notify_highest_role(
                 message.guild,
-                message.author,
-                message.channel,
-                f"[AUTO-MOD] Spam detected: {spam_info['reason']}"
+                f"🚨 **Spam Detected**\n"
+                f"User: {message.author.mention} (`{message.author.id}`)\n"
+                f"Type: {spam_info['type']}\n"
+                f"Reason: {spam_info['reason']}\n"
+                f"Action: Auto-muted for 7 days"
             )
             
             # Log the spam
             self.data.add_security_log(
-                str(message.guild.id),
+                guild_id,
                 "spam_detected",
                 {
                     "user_id": str(message.author.id),
                     "type": spam_info["type"],
                     "reason": spam_info["reason"],
-                    "severity": spam_info["severity"]
+                    "severity": spam_info["severity"],
+                    "action": "muted_7days"
                 }
             )
             
             # Clear spam tracking after punishment
-            self.data.clear_spam_tracking(str(message.guild.id), str(message.author.id))
+            self.data.clear_spam_tracking(guild_id, str(message.author.id))
             
             return True
         except Exception as e:
@@ -383,3 +429,34 @@ class SecurityManager:
         except Exception as e:
             print(f"Failed to handle auto-mod: {e}")
             return False
+    
+    async def notify_highest_role(self, guild: discord.Guild, message: str):
+        """Notify members with highest role about security event"""
+        try:
+            # Get the highest role (excluding @everyone and bot roles)
+            highest_role = None
+            for role in sorted(guild.roles, key=lambda r: r.position, reverse=True):
+                if role.name != "@everyone" and not role.is_bot_managed() and len(role.members) > 0:
+                    highest_role = role
+                    break
+            
+            if not highest_role:
+                return
+            
+            # Send DM to all members with the highest role
+            embed = discord.Embed(
+                title="🚨 Security Alert",
+                description=message,
+                color=discord.Color.red(),
+                timestamp=datetime.now()
+            )
+            embed.set_footer(text=f"Server: {guild.name}")
+            
+            for member in highest_role.members:
+                if not member.bot:
+                    try:
+                        await member.send(embed=embed)
+                    except:
+                        pass  # Ignore if DM fails
+        except Exception as e:
+            print(f"Failed to notify highest role: {e}")

@@ -74,19 +74,29 @@ def has_admin_permissions():
                 ctx.author.id in OWNER_IDS)
     return commands.check(predicate)
 
-async def send_dm_notification(member: discord.Member, action: str, reason: str, server_name: str, extra_info: str = None) -> bool:
+async def send_dm_notification(member: discord.Member, action: str, reason: str, server_name: str, extra_info: str = None, guild_id: str = None) -> bool:
     """Send DM notification to user about moderation action"""
+    from localization import get_text
+    
     try:
+        # Get guild language
+        if guild_id is None:
+            guild_id = str(member.guild.id) if member.guild else "0"
+        
         embed = discord.Embed(
-            title=f"⚠️ Thông Báo Vi Phạm",
-            description=f"Bạn đã bị **{action}** tại server **{server_name}**",
+            title=get_text(guild_id, "dm_title"),
+            description=get_text(guild_id, "dm_description", action=action, server=server_name),
             color=discord.Color.red(),
             timestamp=datetime.now()
         )
-        embed.add_field(name="📝 Lý do", value=reason or "Không có lý do", inline=False)
+        
+        no_reason = get_text(guild_id, "dm_no_reason")
+        embed.add_field(name=get_text(guild_id, "dm_reason"), value=reason or no_reason, inline=False)
+        
         if extra_info:
-            embed.add_field(name="ℹ️ Thông tin thêm", value=extra_info, inline=False)
-        embed.set_footer(text="Vui lòng tuân thủ quy định của server")
+            embed.add_field(name=get_text(guild_id, "dm_info"), value=extra_info, inline=False)
+        
+        embed.set_footer(text=get_text(guild_id, "dm_footer"))
         
         await member.send(embed=embed)
         return True

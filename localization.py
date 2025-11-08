@@ -169,6 +169,19 @@ TRANSLATIONS = {
         "dm_footer": "Please follow server rules",
         "dm_no_reason": "No reason provided",
         
+        # Action translations
+        "action_warned": "warned {count}/10 times",
+        "action_kicked": "kicked from server",
+        "action_banned": "permanently banned",
+        "action_timeout": "timed out for {duration}",
+        "action_muted_7days": "muted for 7 days",
+        "extra_rejoin": "You can rejoin if you have an invite link",
+        "extra_cannot_rejoin": "You cannot rejoin this server",
+        "extra_timeout_duration": "Mute duration: {duration}",
+        "extra_spam_detected": "Automatic punishment for spam behavior",
+        "extra_raid_detected": "Automatic punishment for raid behavior",
+        "extra_nuke_detected": "Automatic punishment for nuke attempt",
+        
         # Language
         "language_title": "🌐 Language Settings",
         "language_current": "Current language: **{language}**",
@@ -341,6 +354,19 @@ TRANSLATIONS = {
         "dm_info": "ℹ️ Thông tin thêm",
         "dm_footer": "Vui lòng tuân thủ quy định của server",
         "dm_no_reason": "Không có lý do",
+        
+        # Action translations
+        "action_warned": "cảnh báo lần {count}/10",
+        "action_kicked": "kick khỏi server",
+        "action_banned": "ban vĩnh viễn",
+        "action_timeout": "timeout {duration}",
+        "action_muted_7days": "mute 7 ngày",
+        "extra_rejoin": "Bạn có thể join lại server nếu có invite link",
+        "extra_cannot_rejoin": "Bạn sẽ không thể join lại server này",
+        "extra_timeout_duration": "Thời gian mute: {duration}",
+        "extra_spam_detected": "Trừng phạt tự động do hành vi spam",
+        "extra_raid_detected": "Trừng phạt tự động do hành vi raid",
+        "extra_nuke_detected": "Trừng phạt tự động do cố gắng phá hoại server",
         
         # Language
         "language_title": "🌐 Cài đặt Ngôn ngữ",
