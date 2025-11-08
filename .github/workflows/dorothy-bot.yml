@@ -70,8 +70,8 @@ jobs:
       run: |
         curl -H "Content-Type: application/json" -d '{"embeds":[{"title":"❌ Dorothy Bot Error","description":"Workflow failed or timed out. Retriggering...","color":16711680,"timestamp":"'$(date -u +%Y-%m-%dT%H:%M:%S.000Z)'"}]}' ${{ secrets.DISCORD_WEBHOOK_URL }}
     
-    - name: Re-trigger workflow on timeout or error
-      if: failure() || cancelled()
+    - name: Re-trigger workflow on timeout or error only
+      if: failure()
       uses: actions/github-script@v6
       with:
         script: |
