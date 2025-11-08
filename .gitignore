@@ -20,7 +20,6 @@ build/
 *.db
 *.sqlite
 *.json.bak
-dorothy_data.json
 
 # IDE
 .vscode/

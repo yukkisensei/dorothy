@@ -1,0 +1,23 @@
+{
+  "warnings": {},
+  "kicks": {},
+  "bans": {},
+  "mutes": {},
+  "prefixes": {},
+  "languages": {
+    "123456789": "vi"
+  },
+  "security": {
+    "anti_raid_enabled": {},
+    "anti_spam_enabled": {},
+    "anti_nuke_enabled": {},
+    "auto_mod_enabled": {},
+    "whitelisted_users": {},
+    "blacklisted_words": {},
+    "trusted_roles": {},
+    "security_logs": {}
+  },
+  "spam_tracking": {},
+  "raid_tracking": {},
+  "nuke_tracking": {}
+}
