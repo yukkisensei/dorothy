@@ -39,9 +39,13 @@ from discord.ext import commands
 from dotenv import load_dotenv
 
 # Import modules
+import config
 from config import PREFIX, OWNER_IDS, BOT_NAME, VERSION
 from database import DataManager
 from security import SecurityManager
+import database
+import security
+import utils
 import moderation
 import info_commands
 import security_commands
