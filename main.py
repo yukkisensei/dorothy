@@ -87,7 +87,6 @@ def setup_bot():
     moderation.setup_commands(bot)
     
     # Initialize modules
-    config.init_config()
     database.init_database(data_manager)
     security.init_security(data_manager)
     moderation.init_moderation(data_manager)
@@ -96,6 +95,7 @@ def setup_bot():
     security_commands.init_security_commands(data_manager)
     doro_ai.init_doro_ai()
     
+    # Setup events
     events.setup_events(bot, data_manager, security_manager)
     
     try:
