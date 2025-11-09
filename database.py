@@ -45,6 +45,10 @@ class DataManager:
         if "dm_blocked_users" not in data:
             data["dm_blocked_users"] = {}
         
+        # Add log_channels if missing
+        if "log_channels" not in data:
+            data["log_channels"] = {}
+        
         return data
     
     def _get_default_structure(self) -> Dict:
@@ -56,6 +60,7 @@ class DataManager:
             "mutes": {},
             "prefixes": {},
             "languages": {},
+            "log_channels": {},
             "security": {
                 "anti_raid_enabled": {},
                 "anti_spam_enabled": {},
@@ -358,4 +363,23 @@ class DataManager:
         """Clear command tracking for user"""
         user_id = str(user_id)
         if user_id in self.data["command_spam_tracking"]:
-            del self.data["command_spam_tracking"][user_id]
+            self.data["command_spam_tracking"][user_id] = []
+    
+    # ==================== LOG CHANNEL SYSTEM ====================
+    def set_log_channel(self, guild_id: str, channel_id: int):
+        """Set log channel for server"""
+        guild_id = str(guild_id)
+        self.data["log_channels"][guild_id] = channel_id
+        self.save_data()
+    
+    def get_log_channel(self, guild_id: str) -> Optional[int]:
+        """Get log channel ID for server"""
+        guild_id = str(guild_id)
+        return self.data["log_channels"].get(guild_id, None)
+    
+    def remove_log_channel(self, guild_id: str):
+        """Remove log channel for server"""
+        guild_id = str(guild_id)
+        if guild_id in self.data["log_channels"]:
+            del self.data["log_channels"][guild_id]
+            self.save_data()

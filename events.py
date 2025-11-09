@@ -409,3 +409,57 @@ def setup_events(bot_instance: commands.Bot, dm: DataManager, sm: SecurityManage
             color=discord.Color.green()
         )
         await interaction.response.send_message(embed=embed)
+    
+    @bot.tree.command(name="logchannel", description="Set log channel for moderation & security / Đặt kênh log cho moderation & bảo mật")
+    @discord.app_commands.describe(channel="Channel to send logs / Kênh để gửi log")
+    async def set_log_channel(interaction: discord.Interaction, channel: discord.TextChannel = None):
+        if await check_slash_spam(interaction):
+            return
+        from localization import get_text
+        from config import OWNER_IDS
+        
+        # Check if user is admin
+        owner_ids = OWNER_IDS if OWNER_IDS else []
+        if not (interaction.user.guild_permissions.administrator or 
+                interaction.user.id == interaction.guild.owner_id or
+                interaction.user.id in owner_ids):
+            await interaction.response.send_message(
+                "❌ **English:** Only administrators can set log channel!\n"
+                "❌ **Tiếng Việt:** Chỉ quản trị viên mới có thể đặt kênh log!",
+                ephemeral=True
+            )
+            return
+        
+        guild_id = str(interaction.guild.id)
+        
+        # If no channel provided, show current setting
+        if channel is None:
+            current_channel_id = data_manager.get_log_channel(guild_id)
+            if current_channel_id:
+                current_channel = interaction.guild.get_channel(current_channel_id)
+                if current_channel:
+                    await interaction.response.send_message(
+                        get_text(guild_id, "logchannel_current", channel=current_channel.mention),
+                        ephemeral=True
+                    )
+                else:
+                    await interaction.response.send_message(
+                        get_text(guild_id, "logchannel_invalid"),
+                        ephemeral=True
+                    )
+            else:
+                await interaction.response.send_message(
+                    get_text(guild_id, "logchannel_none"),
+                    ephemeral=True
+                )
+            return
+        
+        # Set the log channel
+        data_manager.set_log_channel(guild_id, channel.id)
+        
+        embed = discord.Embed(
+            title=get_text(guild_id, "logchannel_title"),
+            description=get_text(guild_id, "logchannel_set", channel=channel.mention),
+            color=discord.Color.green()
+        )
+        await interaction.response.send_message(embed=embed)

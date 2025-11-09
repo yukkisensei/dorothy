@@ -191,6 +191,13 @@ TRANSLATIONS = {
         "language_option_desc": "Choose language",
         "language_english": "English",
         "language_vietnamese": "Tiếng Việt",
+        
+        # Log Channel
+        "logchannel_title": "📋 Log Channel Settings",
+        "logchannel_set": "✅ Log channel set to {channel}!\nAll moderation and security logs will be sent here.",
+        "logchannel_current": "📋 Current log channel: {channel}\nUse `/logchannel #channel` to change it.",
+        "logchannel_none": "ℹ️ No log channel set.\nUse `/logchannel #channel` to set one.",
+        "logchannel_invalid": "⚠️ Log channel is set but the channel no longer exists.\nUse `/logchannel #channel` to set a new one.",
     },
     
     "vi": {
@@ -377,6 +384,13 @@ TRANSLATIONS = {
         "language_option_desc": "Chọn ngôn ngữ",
         "language_english": "English",
         "language_vietnamese": "Tiếng Việt",
+        
+        # Log Channel
+        "logchannel_title": "📋 Cài đặt Kênh Log",
+        "logchannel_set": "✅ Đã đặt kênh log thành {channel}!\nTất cả log moderation và bảo mật sẽ được gửi vào đây.",
+        "logchannel_current": "📋 Kênh log hiện tại: {channel}\nDùng `/logchannel #kênh` để thay đổi.",
+        "logchannel_none": "ℹ️ Chưa đặt kênh log.\nDùng `/logchannel #kênh` để đặt.",
+        "logchannel_invalid": "⚠️ Kênh log đã được đặt nhưng kênh không còn tồn tại.\nDùng `/logchannel #kênh` để đặt kênh mới.",
     }
 }
 

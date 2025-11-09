@@ -107,9 +107,24 @@ async def send_dm_notification(member: discord.Member, action: str, reason: str,
 
 async def log_moderation_action(guild: discord.Guild, action: str, target: discord.Member, moderator: discord.Member, reason: str = None):
     """Log moderation actions to a log channel if exists"""
-    log_channel = discord.utils.get(guild.text_channels, name="mod-log")
+    from database import DataManager
+    from localization import get_text
+    
+    data_manager = DataManager()
+    guild_id = str(guild.id)
+    log_channel_id = data_manager.get_log_channel(guild_id)
+    
+    # Try custom log channel first, fallback to mod-log
+    log_channel = None
+    if log_channel_id:
+        log_channel = guild.get_channel(log_channel_id)
+    
+    if not log_channel:
+        log_channel = discord.utils.get(guild.text_channels, name="mod-log")
+    
     if log_channel:
         try:
+            no_reason = get_text(guild_id, "dm_no_reason")
             embed = discord.Embed(
                 title=f"🔒 {action}",
                 color=discord.Color.red(),
@@ -117,15 +132,28 @@ async def log_moderation_action(guild: discord.Guild, action: str, target: disco
             )
             embed.add_field(name="👮 Moderator", value=moderator.mention, inline=True)
             embed.add_field(name="👤 Target", value=target.mention, inline=True)
-            embed.add_field(name="📝 Lý do", value=reason or "Không có lý do", inline=False)
+            embed.add_field(name=get_text(guild_id, "warning_reason"), value=reason or no_reason, inline=False)
             embed.set_footer(text=f"ID: {target.id}")
             await log_channel.send(embed=embed)
         except:
             pass
 
 async def log_security_event(guild: discord.Guild, event_title: str, description: str, color: discord.Color = discord.Color.orange()):
-    """Log security events to security-log channel"""
-    log_channel = discord.utils.get(guild.text_channels, name="security-log")
+    """Log security events to log channel (same as moderation)"""
+    from database import DataManager
+    
+    data_manager = DataManager()
+    guild_id = str(guild.id)
+    log_channel_id = data_manager.get_log_channel(guild_id)
+    
+    # Try custom log channel first, fallback to security-log
+    log_channel = None
+    if log_channel_id:
+        log_channel = guild.get_channel(log_channel_id)
+    
+    if not log_channel:
+        log_channel = discord.utils.get(guild.text_channels, name="security-log")
+    
     if log_channel:
         try:
             embed = discord.Embed(

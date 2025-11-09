@@ -130,57 +130,65 @@ def setup_commands(bot: commands.Bot):
 
     @bot.command(name='serverinfo', aliases=['server'])
     async def server_info(ctx):
-        """Hiển thị thông tin server"""
+        """Để hiển thị thông tin server"""
+        from localization import get_text
+        guild_id = str(ctx.guild.id)
         guild = ctx.guild
         
         embed = discord.Embed(
-            title=f"📊 Thông tin {guild.name}",
+            title=get_text(guild_id, "serverinfo_title", name=guild.name),
             color=discord.Color.blue(),
             timestamp=datetime.now()
         )
         
         embed.set_thumbnail(url=guild.icon.url if guild.icon else None)
-        embed.add_field(name="🆔 ID", value=guild.id, inline=True)
-        embed.add_field(name="👑 Chủ sở hữu", value=guild.owner.mention, inline=True)
-        embed.add_field(name="📅 Ngày tạo", value=guild.created_at.strftime("%d/%m/%Y"), inline=True)
-        embed.add_field(name="👥 Thành viên", value=guild.member_count, inline=True)
-        embed.add_field(name="💬 Channels", value=len(guild.channels), inline=True)
-        embed.add_field(name="📜 Roles", value=len(guild.roles), inline=True)
-        embed.add_field(name="🎯 Boost Level", value=guild.premium_tier, inline=True)
-        embed.add_field(name="🚀 Số Boost", value=guild.premium_subscription_count or 0, inline=True)
+        embed.add_field(name=get_text(guild_id, "serverinfo_id"), value=guild.id, inline=True)
+        embed.add_field(name=get_text(guild_id, "serverinfo_owner"), value=guild.owner.mention, inline=True)
+        embed.add_field(name=get_text(guild_id, "serverinfo_created"), value=guild.created_at.strftime("%d/%m/%Y"), inline=True)
+        embed.add_field(name=get_text(guild_id, "serverinfo_members"), value=guild.member_count, inline=True)
+        embed.add_field(name=get_text(guild_id, "serverinfo_channels"), value=len(guild.channels), inline=True)
+        embed.add_field(name=get_text(guild_id, "serverinfo_roles"), value=len(guild.roles), inline=True)
+        embed.add_field(name=get_text(guild_id, "serverinfo_boost"), value=guild.premium_tier, inline=True)
+        embed.add_field(name=get_text(guild_id, "serverinfo_boosts"), value=guild.premium_subscription_count or 0, inline=True)
         
         await ctx.send(embed=embed)
 
     @bot.command(name='userinfo', aliases=['user', 'whois'])
     async def user_info(ctx, member: discord.Member = None):
-        """Hiển thị thông tin thành viên"""
+        """Để hiển thị thông tin thành viên"""
+        from localization import get_text
+        guild_id = str(ctx.guild.id)
         member = member or ctx.author
         
         embed = discord.Embed(
-            title=f"👤 Thông tin {member.display_name}",
+            title=get_text(guild_id, "userinfo_title", name=member.display_name),
             color=member.color,
             timestamp=datetime.now()
         )
         
+        none_text = get_text(guild_id, "userinfo_none")
         embed.set_thumbnail(url=member.avatar.url if member.avatar else member.default_avatar.url)
-        embed.add_field(name="🆔 ID", value=member.id, inline=True)
-        embed.add_field(name="📛 Username", value=str(member), inline=True)
-        embed.add_field(name="🎭 Nickname", value=member.nick or "Không có", inline=True)
-        embed.add_field(name="📅 Tạo tài khoản", value=member.created_at.strftime("%d/%m/%Y"), inline=True)
-        embed.add_field(name="📥 Tham gia server", value=member.joined_at.strftime("%d/%m/%Y") if member.joined_at else "Unknown", inline=True)
-        embed.add_field(name="🎨 Màu role", value=str(member.color), inline=True)
-        embed.add_field(name="📜 Roles", value=" ".join([r.mention for r in member.roles[1:]]) or "Không có", inline=False)
-        embed.add_field(name="⚠️ Cảnh báo", value=f"{data_manager.get_warnings(ctx.guild.id, member.id)}/10", inline=True)
+        embed.add_field(name=get_text(guild_id, "userinfo_id"), value=member.id, inline=True)
+        embed.add_field(name=get_text(guild_id, "userinfo_username"), value=str(member), inline=True)
+        embed.add_field(name=get_text(guild_id, "userinfo_nickname"), value=member.nick or none_text, inline=True)
+        embed.add_field(name=get_text(guild_id, "userinfo_created"), value=member.created_at.strftime("%d/%m/%Y"), inline=True)
+        embed.add_field(name=get_text(guild_id, "userinfo_joined"), value=member.joined_at.strftime("%d/%m/%Y") if member.joined_at else "Unknown", inline=True)
+        embed.add_field(name=get_text(guild_id, "userinfo_color"), value=str(member.color), inline=True)
+        embed.add_field(name=get_text(guild_id, "userinfo_roles"), value=" ".join([r.mention for r in member.roles[1:]]) or none_text, inline=False)
+        embed.add_field(name=get_text(guild_id, "userinfo_warnings"), value=f"{data_manager.get_warnings(ctx.guild.id, member.id)}/10", inline=True)
         
         await ctx.send(embed=embed)
 
     @bot.command(name='ping')
     async def ping(ctx):
         """Kiểm tra độ trễ của bot"""
+        from localization import get_text
+        guild_id = str(ctx.guild.id) if ctx.guild else "0"
+        
         latency = round(bot.latency * 1000)
         embed = discord.Embed(
-            title="🏓 Pong!",
-            description=f"Độ trễ: **{latency}ms**",
+            title=get_text(guild_id, "ping_title"),
+            description=get_text(guild_id, "ping_latency", ms=latency),
             color=discord.Color.green() if latency < 100 else discord.Color.orange()
         )
         await ctx.send(embed=embed)
@@ -189,17 +197,20 @@ def setup_commands(bot: commands.Bot):
     @has_mod_permissions()
     async def set_prefix_command(ctx, new_prefix: str = None):
         """Đặt prefix tùy chỉnh cho server"""
+        from localization import get_text
+        guild_id = str(ctx.guild.id)
+        
         if new_prefix is None:
             current = data_manager.get_prefix(ctx.guild.id)
-            await ctx.send(f"📌 Prefix hiện tại: `{current}`\nSử dụng: `{current}setprefix <prefix>` để thay đổi")
+            await ctx.send(get_text(guild_id, "prefix_current", prefix=current))
             return
         
         if len(new_prefix) > 5:
-            await ctx.send("❌ Prefix không được dài quá 5 ký tự!")
+            await ctx.send(get_text(guild_id, "error_prefix_long"))
             return
         
         data_manager.set_prefix(ctx.guild.id, new_prefix)
-        await ctx.send(f"✅ Đã đổi prefix thành: `{new_prefix}`")
+        await ctx.send(get_text(guild_id, "prefix_changed", prefix=new_prefix))
 
     @bot.command(name='say')
     @has_mod_permissions()

@@ -25,9 +25,12 @@ def setup_moderation(dm: DataManager):
 # ==================== AUTO WARNING SYSTEM ====================
 async def add_auto_warning(guild: discord.Guild, member: discord.Member, channel: discord.TextChannel, reason: str):
     """Add automatic warning from security system"""
+    from localization import get_text
+    
     if not data_manager:
         return
     
+    guild_id = str(guild.id)
     warning_count = data_manager.add_warning(guild.id, member.id, reason)
     
     # Get warning level configuration
@@ -36,25 +39,27 @@ async def add_auto_warning(guild: discord.Guild, member: discord.Member, channel
         
         # Create embed
         embed = discord.Embed(
-            title="⚠️ CẢNH BÁO TỰ ĐỘNG",
+            title=get_text(guild_id, "warning_auto"),
             description=level_config["message"],
             color=discord.Color.orange() if warning_count < 6 else discord.Color.red(),
             timestamp=datetime.now()
         )
-        embed.add_field(name="👤 Thành viên", value=member.mention, inline=True)
-        embed.add_field(name="🔢 Lần cảnh báo", value=f"{warning_count}/10", inline=True)
-        embed.add_field(name="📝 Lý do", value=reason, inline=False)
+        embed.add_field(name=get_text(guild_id, "warning_member"), value=member.mention, inline=True)
+        embed.add_field(name=get_text(guild_id, "warning_count"), value=f"{warning_count}/10", inline=True)
+        embed.add_field(name=get_text(guild_id, "warning_reason"), value=reason, inline=False)
         embed.set_footer(text="Auto-Moderation System")
         
         await channel.send(embed=embed)
         
         # Send DM notification
+        action_text = get_text(guild_id, "action_warned", count=warning_count)
         await send_dm_notification(
             member,
-            f"cảnh báo lần {warning_count}/10",
+            action_text,
             reason,
             guild.name,
-            level_config["message"]
+            level_config["message"],
+            guild_id
         )
         
         # Apply action based on warning level
@@ -67,12 +72,15 @@ async def add_auto_warning(guild: discord.Guild, member: discord.Member, channel
         
         elif level_config["action"] == "kick":
             try:
+                action_text = get_text(guild_id, "action_kicked")
+                extra_text = get_text(guild_id, "extra_rejoin")
                 await send_dm_notification(
                     member,
-                    "kick khỏi server",
+                    action_text,
                     reason,
                     guild.name,
-                    "Bạn có thể join lại server nếu có invite link"
+                    extra_text,
+                    guild_id
                 )
                 await member.kick(reason=f"[AUTO] Warning #{warning_count}: {reason}")
             except:
@@ -80,12 +88,15 @@ async def add_auto_warning(guild: discord.Guild, member: discord.Member, channel
         
         elif level_config["action"] == "ban":
             try:
+                action_text = get_text(guild_id, "action_banned")
+                extra_text = get_text(guild_id, "extra_cannot_rejoin")
                 await send_dm_notification(
                     member,
-                    "ban vĩnh viễn",
+                    action_text,
                     reason,
                     guild.name,
-                    "Bạn sẽ không thể join lại server này"
+                    extra_text,
+                    guild_id
                 )
                 await member.ban(reason=f"[AUTO] Warning #{warning_count}: {reason}")
             except:
@@ -97,13 +108,19 @@ def setup_commands(bot: commands.Bot):
     
     @bot.command(name='warn', aliases=['w', 'warning'])
     @has_mod_permissions()
-    async def warn_user(ctx, member: discord.Member, *, reason: str = "Không có lý do"):
+    async def warn_user(ctx, member: discord.Member, *, reason: str = None):
         """Cảnh báo một thành viên"""
+        from localization import get_text
+        guild_id = str(ctx.guild.id)
+        
+        if reason is None:
+            reason = get_text(guild_id, "dm_no_reason")
+        
         if member == ctx.author:
-            return await ctx.send("❌ Bạn không thể tự cảnh báo chính mình!")
+            return await ctx.send(get_text(guild_id, "error_self_warn"))
         
         if member.bot:
-            return await ctx.send("❌ Không thể cảnh báo bot!")
+            return await ctx.send(get_text(guild_id, "error_bot_action"))
         
         # Add warning
         warning_count = data_manager.add_warning(ctx.guild.id, member.id, reason)
@@ -114,57 +131,63 @@ def setup_commands(bot: commands.Bot):
             
             # Create embed
             embed = discord.Embed(
-                title="⚠️ CẢNH BÁO",
+                title=get_text(guild_id, "warning_title"),
                 description=level_config["message"],
                 color=discord.Color.orange() if warning_count < 6 else discord.Color.red(),
                 timestamp=datetime.now()
             )
-            embed.add_field(name="👤 Thành viên", value=member.mention, inline=True)
-            embed.add_field(name="🔢 Lần cảnh báo", value=f"{warning_count}/10", inline=True)
-            embed.add_field(name="📝 Lý do", value=reason, inline=False)
+            embed.add_field(name=get_text(guild_id, "warning_member"), value=member.mention, inline=True)
+            embed.add_field(name=get_text(guild_id, "warning_count"), value=f"{warning_count}/10", inline=True)
+            embed.add_field(name=get_text(guild_id, "warning_reason"), value=reason, inline=False)
             embed.set_footer(text=f"Moderator: {ctx.author.name}")
             
             await ctx.send(embed=embed)
             
             # Send DM notification
+            action_text = get_text(guild_id, "action_warned", count=warning_count)
             await send_dm_notification(
                 member,
-                f"cảnh báo lần {warning_count}/10",
+                action_text,
                 reason,
                 ctx.guild.name,
-                level_config["message"]
+                level_config["message"],
+                guild_id
             )
             
             # Apply action based on warning level
             if level_config["action"] == "timeout":
                 try:
-                    duration = timedelta(minutes=level_config["duration"])
+                    duration = timedelta(minutes=level_config['duration'])
                     await member.timeout(duration, reason=f"Warning #{warning_count}: {reason}")
-                    await ctx.send(f"🔇 {member.mention} đã bị mute {level_config['duration']} phút!")
+                    await ctx.send(get_text(guild_id, "timeout_success", user=member.mention, duration=level_config['duration']))
                 except discord.Forbidden:
-                    await ctx.send("❌ Không có quyền timeout thành viên này!")
+                    await ctx.send(get_text(guild_id, "error_forbidden_timeout"))
             
             elif level_config["action"] == "kick":
                 try:
+                    action_text = get_text(guild_id, "action_kicked")
+                    extra_text = get_text(guild_id, "extra_rejoin")
                     await send_dm_notification(
-                        member, "kick khỏi server", reason, ctx.guild.name,
-                        "Bạn có thể join lại server nếu có invite link"
+                        member, action_text, reason, ctx.guild.name,
+                        extra_text, guild_id
                     )
                     await member.kick(reason=f"Warning #{warning_count}: {reason}")
                     await ctx.send(f"👢 {member.mention} đã bị kick khỏi server!")
                 except discord.Forbidden:
-                    await ctx.send("❌ Không có quyền kick thành viên này!")
+                    await ctx.send(get_text(guild_id, "error_forbidden_kick"))
             
             elif level_config["action"] == "ban":
                 try:
+                    action_text = get_text(guild_id, "action_banned")
+                    extra_text = get_text(guild_id, "extra_cannot_rejoin")
                     await send_dm_notification(
-                        member, "ban vĩnh viễn", reason, ctx.guild.name,
-                        "Bạn sẽ không thể join lại server này"
+                        member, action_text, reason, ctx.guild.name,
+                        extra_text, guild_id
                     )
                     await member.ban(reason=f"Warning #{warning_count}: {reason}")
                     await ctx.send(f"🔨 {member.mention} đã bị ban vĩnh viễn!")
                 except discord.Forbidden:
-                    await ctx.send("❌ Không có quyền ban thành viên này!")
+                    await ctx.send(get_text(guild_id, "error_forbidden_ban"))
             
             # Log action
             await log_moderation_action(ctx.guild, f"Warning #{warning_count}", member, ctx.author, reason)
@@ -172,7 +195,7 @@ def setup_commands(bot: commands.Bot):
             # Beyond level 10, auto-ban
             try:
                 await member.ban(reason=f"Excessive warnings: {warning_count}")
-                await ctx.send(f"🔨 {member.mention} đã vượt quá giới hạn cảnh báo và bị ban!")
+                await ctx.send(get_text(guild_id, "warning_excessive", user=member.mention))
             except:
                 pass
 
@@ -180,20 +203,23 @@ def setup_commands(bot: commands.Bot):
     @has_mod_permissions()
     async def check_warnings(ctx, member: discord.Member = None):
         """Kiểm tra số lần cảnh báo"""
+        from localization import get_text
+        guild_id = str(ctx.guild.id)
+        
         member = member or ctx.author
         warning_count = data_manager.get_warnings(ctx.guild.id, member.id)
         
         embed = discord.Embed(
-            title="📊 Thống kê cảnh báo",
+            title=get_text(guild_id, "warning_stats"),
             color=discord.Color.blue()
         )
-        embed.add_field(name="👤 Thành viên", value=member.mention, inline=True)
-        embed.add_field(name="⚠️ Số cảnh báo", value=f"{warning_count}/10", inline=True)
+        embed.add_field(name=get_text(guild_id, "warning_member"), value=member.mention, inline=True)
+        embed.add_field(name=get_text(guild_id, "warning_number"), value=f"{warning_count}/10", inline=True)
         
         if warning_count > 0 and warning_count < 10:
             next_level = min(warning_count + 1, 10)
             next_action = WARNING_LEVELS[next_level]["action"]
-            embed.add_field(name="⏭️ Hình phạt tiếp theo", value=next_action.upper(), inline=False)
+            embed.add_field(name=get_text(guild_id, "warning_next"), value=next_action.upper(), inline=False)
         
         await ctx.send(embed=embed)
 
@@ -201,11 +227,14 @@ def setup_commands(bot: commands.Bot):
     @has_mod_permissions()
     async def clear_warnings(ctx, member: discord.Member):
         """Xóa toàn bộ cảnh báo của một thành viên"""
+        from localization import get_text
+        guild_id = str(ctx.guild.id)
+        
         if data_manager.clear_warnings(ctx.guild.id, member.id):
-            await ctx.send(f"✅ Đã xóa toàn bộ cảnh báo của {member.mention}")
+            await ctx.send(get_text(guild_id, "warning_cleared", user=member.mention))
             await log_moderation_action(ctx.guild, "Clear Warnings", member, ctx.author, "Reset warnings to 0")
         else:
-            await ctx.send(f"ℹ️ {member.mention} không có cảnh báo nào!")
+            await ctx.send(get_text(guild_id, "warning_none", user=member.mention))
 
     # ==================== TIMEOUT COMMANDS ====================
     @bot.command(name='timeout', aliases=['mute'])
@@ -217,7 +246,7 @@ def setup_commands(bot: commands.Bot):
             if any(c in duration for c in ['h', 'm', 's', 'd']):
                 timeout_minutes = parse_time_string(duration)
                 if timeout_minutes is None:
-                    return await ctx.send("❌ Format thời gian không hợp lệ! Dùng: 5m, 1h, 2h30m, etc.")
+                    return await ctx.send(get_text(guild_id, "error_invalid_time"))
             else:
                 try:
                     timeout_minutes = int(duration)
@@ -225,14 +254,17 @@ def setup_commands(bot: commands.Bot):
                     reason = duration if not reason else f"{duration} {reason}"
                     timeout_minutes = 5
         
+        from localization import get_text
+        guild_id = str(ctx.guild.id)
+        
         if member == ctx.author:
-            return await ctx.send("❌ Bạn không thể tự mute chính mình!")
+            return await ctx.send(get_text(guild_id, "error_self_timeout"))
         if member.bot:
-            return await ctx.send("❌ Không thể mute bot!")
+            return await ctx.send(get_text(guild_id, "error_bot_action"))
         
         try:
             timeout_duration = timedelta(minutes=timeout_minutes)
-            reason = reason or "Không có lý do"
+            reason = reason or get_text(guild_id, "dm_no_reason")
             
             await send_dm_notification(
                 member, f"timeout {format_duration(timeout_minutes)}", reason,
@@ -242,19 +274,19 @@ def setup_commands(bot: commands.Bot):
             await member.timeout(timeout_duration, reason=reason)
             
             embed = discord.Embed(
-                title="🔇 TIMEOUT",
+                title=get_text(guild_id, "timeout_title"),
                 color=discord.Color.orange(),
                 timestamp=datetime.now()
             )
-            embed.add_field(name="👤 Thành viên", value=member.mention, inline=True)
-            embed.add_field(name="⏱️ Thời gian", value=format_duration(timeout_minutes), inline=True)
-            embed.add_field(name="📝 Lý do", value=reason, inline=False)
+            embed.add_field(name=get_text(guild_id, "warning_member"), value=member.mention, inline=True)
+            embed.add_field(name=get_text(guild_id, "duration"), value=format_duration(timeout_minutes), inline=True)
+            embed.add_field(name=get_text(guild_id, "warning_reason"), value=reason, inline=False)
             embed.set_footer(text=f"Moderator: {ctx.author.name}")
             
             await ctx.send(embed=embed)
             await log_moderation_action(ctx.guild, f"Timeout {timeout_minutes}m", member, ctx.author, reason)
         except discord.Forbidden:
-            await ctx.send("❌ Không có quyền timeout thành viên này!")
+            await ctx.send(get_text(guild_id, "error_forbidden_timeout"))
 
     @bot.command(name='to')
     @has_mod_permissions()
@@ -282,99 +314,124 @@ def setup_commands(bot: commands.Bot):
     # ==================== KICK/BAN COMMANDS ====================
     @bot.command(name='kick', aliases=['k'])
     @has_mod_permissions()
-    async def kick_member(ctx, member: discord.Member, *, reason: str = "Không có lý do"):
+    async def kick_member(ctx, member: discord.Member, *, reason: str = None):
         """Kick một thành viên khỏi server"""
+        from localization import get_text
+        guild_id = str(ctx.guild.id)
+        
+        if reason is None:
+            reason = get_text(guild_id, "dm_no_reason")
+        
         if member == ctx.author:
-            return await ctx.send("❌ Bạn không thể tự kick chính mình!")
+            return await ctx.send(get_text(guild_id, "error_self_kick"))
         if member.bot:
-            return await ctx.send("❌ Không thể kick bot!")
+            return await ctx.send(get_text(guild_id, "error_bot_action"))
         
         try:
+            action_text = get_text(guild_id, "action_kicked")
+            extra_text = get_text(guild_id, "extra_rejoin")
             await send_dm_notification(
-                member, "kick khỏi server", reason, ctx.guild.name,
-                "Bạn có thể join lại server nếu có invite link"
+                member, action_text, reason, ctx.guild.name,
+                extra_text, guild_id
             )
             
             await member.kick(reason=reason)
             
             embed = discord.Embed(
-                title="👢 KICK",
+                title=get_text(guild_id, "kick_title"),
                 color=discord.Color.orange(),
                 timestamp=datetime.now()
             )
-            embed.add_field(name="👤 Thành viên", value=f"{member.mention} ({member.id})", inline=True)
-            embed.add_field(name="📝 Lý do", value=reason, inline=False)
+            embed.add_field(name=get_text(guild_id, "warning_member"), value=f"{member.mention} ({member.id})", inline=True)
+            embed.add_field(name=get_text(guild_id, "warning_reason"), value=reason, inline=False)
             embed.set_footer(text=f"Moderator: {ctx.author.name}")
             
             await ctx.send(embed=embed)
             await log_moderation_action(ctx.guild, "Kick", member, ctx.author, reason)
         except discord.Forbidden:
-            await ctx.send("❌ Không có quyền kick thành viên này!")
+            await ctx.send(get_text(guild_id, "error_forbidden_kick"))
 
     @bot.command(name='ban', aliases=['b'])
     @has_mod_permissions()
-    async def ban_member(ctx, member: discord.Member, *, reason: str = "Không có lý do"):
+    async def ban_member(ctx, member: discord.Member, *, reason: str = None):
         """Ban một thành viên khỏi server"""
+        from localization import get_text
+        guild_id = str(ctx.guild.id)
+        
+        if reason is None:
+            reason = get_text(guild_id, "dm_no_reason")
+        
         if member == ctx.author:
-            return await ctx.send("❌ Bạn không thể tự ban chính mình!")
+            return await ctx.send(get_text(guild_id, "error_self_ban"))
         if member.bot:
-            return await ctx.send("❌ Không thể ban bot!")
+            return await ctx.send(get_text(guild_id, "error_bot_action"))
         
         try:
+            action_text = get_text(guild_id, "action_banned")
+            extra_text = get_text(guild_id, "extra_cannot_rejoin")
             await send_dm_notification(
-                member, "ban vĩnh viễn", reason, ctx.guild.name,
-                "Bạn sẽ không thể join lại server này"
+                member, action_text, reason, ctx.guild.name,
+                extra_text, guild_id
             )
             
             await member.ban(reason=reason)
             
             embed = discord.Embed(
-                title="🔨 BAN",
+                title=get_text(guild_id, "ban_title"),
                 color=discord.Color.red(),
                 timestamp=datetime.now()
             )
-            embed.add_field(name="👤 Thành viên", value=f"{member.mention} ({member.id})", inline=True)
-            embed.add_field(name="📝 Lý do", value=reason, inline=False)
+            embed.add_field(name=get_text(guild_id, "warning_member"), value=f"{member.mention} ({member.id})", inline=True)
+            embed.add_field(name=get_text(guild_id, "warning_reason"), value=reason, inline=False)
             embed.set_footer(text=f"Moderator: {ctx.author.name}")
             
             await ctx.send(embed=embed)
             await log_moderation_action(ctx.guild, "Ban", member, ctx.author, reason)
         except discord.Forbidden:
-            await ctx.send("❌ Không có quyền ban thành viên này!")
+            await ctx.send(get_text(guild_id, "error_forbidden_ban"))
 
     @bot.command(name='unban', aliases=['ub', 'rban'])
     @has_mod_permissions()
-    async def unban_member(ctx, user_id: int, *, reason: str = "Đã được tha thứ"):
+    async def unban_member(ctx, user_id: int, *, reason: str = None):
         """Unban một thành viên"""
+        from localization import get_text
+        guild_id = str(ctx.guild.id)
+        
+        if reason is None:
+            reason = get_text(guild_id, "dm_no_reason")
+        
         try:
             user = await bot.fetch_user(user_id)
             await ctx.guild.unban(user, reason=reason)
             
             embed = discord.Embed(
-                title="✅ UNBAN",
+                title=get_text(guild_id, "unban_title"),
                 color=discord.Color.green(),
                 timestamp=datetime.now()
             )
-            embed.add_field(name="👤 User", value=f"{user.mention} ({user.id})", inline=True)
-            embed.add_field(name="📝 Lý do", value=reason, inline=False)
+            embed.add_field(name=get_text(guild_id, "user"), value=f"{user.mention} ({user.id})", inline=True)
+            embed.add_field(name=get_text(guild_id, "warning_reason"), value=reason, inline=False)
             embed.set_footer(text=f"Moderator: {ctx.author.name}")
             
             await ctx.send(embed=embed)
         except discord.NotFound:
-            await ctx.send("❌ Không tìm thấy user với ID này!")
+            await ctx.send(get_text(guild_id, "error_user_not_found"))
         except discord.Forbidden:
-            await ctx.send("❌ Không có quyền unban!")
+            await ctx.send(get_text(guild_id, "error_forbidden_unban"))
 
     # ==================== UTILITY COMMANDS ====================
     @bot.command(name='clear', aliases=['purge', 'clean'])
     @has_mod_permissions()
     async def clear_messages(ctx, amount: int = 10):
         """Xóa tin nhắn trong channel"""
+        from localization import get_text
+        guild_id = str(ctx.guild.id)
+        
         if amount < 1 or amount > 100:
-            return await ctx.send("❌ Số lượng phải từ 1 đến 100!")
+            return await ctx.send(get_text(guild_id, "error_invalid_amount"))
         
         deleted = await ctx.channel.purge(limit=amount + 1)
-        msg = await ctx.send(f"✅ Đã xóa {len(deleted) - 1} tin nhắn!")
+        msg = await ctx.send(get_text(guild_id, "clear_success", count=len(deleted) - 1))
         
         import asyncio
         await asyncio.sleep(3)
@@ -384,27 +441,36 @@ def setup_commands(bot: commands.Bot):
     @has_mod_permissions()
     async def lock_channel(ctx, channel: discord.TextChannel = None):
         """Khóa channel"""
+        from localization import get_text
+        guild_id = str(ctx.guild.id)
+        
         channel = channel or ctx.channel
         await channel.set_permissions(ctx.guild.default_role, send_messages=False)
-        await ctx.send(f"🔒 Channel {channel.mention} đã được khóa!")
+        await ctx.send(get_text(guild_id, "channel_locked", channel=channel.mention))
 
     @bot.command(name='unlock')
     @has_mod_permissions()
     async def unlock_channel(ctx, channel: discord.TextChannel = None):
         """Mở khóa channel"""
+        from localization import get_text
+        guild_id = str(ctx.guild.id)
+        
         channel = channel or ctx.channel
         await channel.set_permissions(ctx.guild.default_role, send_messages=True)
-        await ctx.send(f"🔓 Channel {channel.mention} đã được mở khóa!")
+        await ctx.send(get_text(guild_id, "channel_unlocked", channel=channel.mention))
 
     @bot.command(name='slowmode', aliases=['slow'])
     @has_mod_permissions()
     async def set_slowmode(ctx, seconds: int = 0):
         """Đặt slowmode cho channel (0 = tắt)"""
+        from localization import get_text
+        guild_id = str(ctx.guild.id)
+        
         if seconds < 0 or seconds > 21600:
-            return await ctx.send("❌ Slowmode phải từ 0 đến 21600 giây (6 giờ)!")
+            return await ctx.send(get_text(guild_id, "error_invalid_slowmode"))
         
         await ctx.channel.edit(slowmode_delay=seconds)
         if seconds == 0:
-            await ctx.send("✅ Đã tắt slowmode!")
+            await ctx.send(get_text(guild_id, "slowmode_disabled"))
         else:
-            await ctx.send(f"✅ Đã đặt slowmode: {seconds} giây!")
+            await ctx.send(get_text(guild_id, "slowmode_set", seconds=seconds))
