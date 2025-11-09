@@ -5,7 +5,8 @@
   "mutes": {},
   "prefixes": {},
   "languages": {
-    "123456789": "vi"
+    "123456789": "vi",
+    "1399359840521814066": "vi"
   },
   "security": {
     "anti_raid_enabled": {},
@@ -15,9 +16,69 @@
     "whitelisted_users": {},
     "blacklisted_words": {},
     "trusted_roles": {},
-    "security_logs": {}
+    "security_logs": {
+      "1421534072601186427": [
+        {
+          "type": "spam_detected",
+          "timestamp": "2025-11-08T19:28:44.034190",
+          "details": {
+            "user_id": "1344312732278591500",
+            "type": "duplicate_spam",
+            "reason": "Repeated the same message 3 times",
+            "severity": "medium",
+            "action": "muted_7days"
+          }
+        }
+      ]
+    }
   },
-  "spam_tracking": {},
+  "spam_tracking": {
+    "1399359840521814066": {
+      "1344312732278591500": [
+        {
+          "content": "izizizizi",
+          "timestamp": "2025-11-08T19:27:00.649688"
+        },
+        {
+          "content": "",
+          "timestamp": "2025-11-08T19:27:10.597623"
+        },
+        {
+          "content": "-say izi",
+          "timestamp": "2025-11-08T19:27:20.184842"
+        }
+      ]
+    },
+    "1421534072601186427": {
+      "1344312732278591500": [
+        {
+          "content": ".",
+          "timestamp": "2025-11-08T19:28:40.679047"
+        },
+        {
+          "content": ".",
+          "timestamp": "2025-11-08T19:28:41.574775"
+        },
+        {
+          "content": ".",
+          "timestamp": "2025-11-08T19:28:42.952218"
+        }
+      ]
+    }
+  },
   "raid_tracking": {},
-  "nuke_tracking": {}
+  "nuke_tracking": {},
+  "command_spam_tracking": {
+    "1344312732278591500": [
+      {
+        "command": "/setlanguage",
+        "timestamp": "2025-11-08T19:26:55.962110"
+      },
+      {
+        "command": "-say",
+        "timestamp": "2025-11-08T19:27:20.184896"
+      }
+    ]
+  },
+  "dm_blocked_users": {}
 }
