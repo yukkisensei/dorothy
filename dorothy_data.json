@@ -1,5 +1,20 @@
 {
-  "warnings": {},
+  "warnings": {
+    "1421534072601186427": {
+      "907889243383267328": [
+        {
+          "timestamp": "2025-11-09T03:52:06.001312",
+          "count": 1,
+          "reason": "Không có lý do"
+        },
+        {
+          "timestamp": "2025-11-09T03:52:18.374021",
+          "count": 2,
+          "reason": "Không có lý do"
+        }
+      ]
+    }
+  },
   "kicks": {},
   "bans": {},
   "mutes": {},
@@ -28,6 +43,41 @@
             "severity": "medium",
             "action": "muted_7days"
           }
+        },
+        {
+          "type": "spam_detected",
+          "timestamp": "2025-11-09T03:49:33.291701",
+          "details": {
+            "user_id": "907889243383267328",
+            "type": "duplicate_spam",
+            "reason": "Repeated the same message 3 times",
+            "severity": "medium",
+            "action": "muted_7days"
+          }
+        },
+        {
+          "type": "spam_detected",
+          "timestamp": "2025-11-09T07:58:33.076488",
+          "details": {
+            "user_id": "1289498246842159126",
+            "type": "message_spam",
+            "reason": "Sent 5 messages in 10 seconds",
+            "severity": "medium",
+            "action": "muted_7days"
+          }
+        }
+      ],
+      "1336708598449045534": [
+        {
+          "type": "spam_detected",
+          "timestamp": "2025-11-09T04:52:55.415992",
+          "details": {
+            "user_id": "1228936662487269397",
+            "type": "duplicate_spam",
+            "reason": "Repeated the same message 3 times",
+            "severity": "medium",
+            "action": "muted_7days"
+          }
         }
       ]
     }
@@ -36,38 +86,544 @@
     "1399359840521814066": {
       "1344312732278591500": [
         {
-          "content": "izizizizi",
-          "timestamp": "2025-11-08T19:27:00.649688"
+          "content": "<:nhin_cai_loz:1404836946102063314>",
+          "timestamp": "2025-11-09T07:29:10.403907"
         },
         {
-          "content": "",
-          "timestamp": "2025-11-08T19:27:10.597623"
+          "content": "no",
+          "timestamp": "2025-11-09T07:29:12.359823"
         },
         {
-          "content": "-say izi",
-          "timestamp": "2025-11-08T19:27:20.184842"
+          "content": "no",
+          "timestamp": "2025-11-09T07:29:21.661485"
+        },
+        {
+          "content": "cu con cac",
+          "timestamp": "2025-11-09T07:31:49.753760"
+        },
+        {
+          "content": "Attempt 56/60 to read tailscale IPv4...\nAttempt 57/60 to read tailscale IPv4...\nAttempt 58/60 to read tailscale IPv4...\nAttempt 59/60 to read tailscale IPv4...\nAttempt 60/60 to read tailscale IPv4...\n=== FINAL NETWORK INFO ===\nHostname: yuu-19205174030\nTailscale IPv4 not available after timeout.\nShowing local IPv4 addresses as fallback:\nAutoconfiguration IPv4 Address. . : 169.254.83.107\nIPv4 Address. . . . . . . . . . . : 10.1.0.105\nIPv4 Address. . . . . . . . . . . : 172.28.160.1\n=== END FINAL NETWORK INFO ===\n1s\nRun Write-Host \"Entering wait loop. Cancel this workflow in Actions to stop the runner.\"\nParserError: D:\\a\\_temp\\6cb62397-b9dd-4a02-8361-e44dba5f01fe.ps1:3\nLine |\n   3 |  while ($true) {\n     |                ~\n     | Missing closing '}' in statement block or type definition.\nError: Process completed with exit code 1.",
+          "timestamp": "2025-11-09T07:32:15.182188"
+        },
+        {
+          "content": "đm",
+          "timestamp": "2025-11-09T07:32:21.595390"
+        },
+        {
+          "content": "fail action r",
+          "timestamp": "2025-11-09T07:32:53.252960"
+        },
+        {
+          "content": "--qr-format value\n        QR code formatting (small or large) (default small)\n  --reset, --reset=false\n        reset unspecified settings to their default values (default false)\n  --shields-up, --shields-up=false\n        don't allow incoming connections (default false)\n  --ssh, --ssh=false\n        run an SSH server, permitting access per tailnet admin's declared policy (default false)\n  --timeout value\n        maximum amount of time to wait for tailscaled to enter a Running state; default (0s) blocks forever (default 0s)\n  --unattended, --unattended=false\n        run in \"Unattended Mode\" where Tailscale keeps running even after the current GUI user logs out (Windows-only) (default false)\nExecuted tailscale up (see output above).\nDumping tailscale status and netcheck for debugging:\nLogged out.\n2025/11/09 07:25:29 No DERP map from tailscaled; using default.\n2025/11/09 07:25:29 attempting to fetch a DERPMap from https://controlplane.tailscale.com\n2025/11/09 07:25:30 portmap: monitor: gateway and self IP changed: gw=10.1.0.1 self=10.1.0.105\n\nReport:\n    * Time: 2025-11-09T07:25:30.7072622Z\n    * UDP: true\n    * IPv4: yes, 145.132.102.176:13313\n    * IPv6: no, but OS has support\n    * MappingVariesByDestIP: false\n    * PortMapping: \n    * Nearest DERP: Ashburn\n    * DERP latency:\n        - iad: 5.2ms   (Ashburn)\n        - nyc: 11.9ms  (New York City)\n        - tor: 18.4ms  (Toronto)\n        - ord: 21.7ms  (Chicago)\n        - mia: 26.2ms  (Miami)\n        - dfw: 29.4ms  (Dallas)\n        - den: 47.8ms  (Denver)\n        - lax: 59.9ms  (Los Angeles)\n        - sfo: 63.3ms  (San Francisco)\n        - sea: 70.3ms  (Seattle)\n        - lhr: 79.5ms  (London)\n        - par: 79.5ms  (Paris)\n        - ams: 84.5ms  (Amsterdam)\n        - fra: 87.6ms  (Frankfurt)\n        - nue: 94ms    (Nuremberg)\n        - mad: 101.6ms (Madrid)\n        - waw: 101.9ms (Warsaw)\n        - hnl: 102.6ms (Honolulu)\n        - sao: 110ms   (São Paulo)\n        - hel: 115.5ms (Helsinki)\n        - tok: 154.6ms (Tokyo)\n        - dbi: 165ms   (Dubai)\n        - nai: 192.5ms (Nairobi)\n        - syd: 193.9ms (Sydney)\n        - hkg: 204.3ms (Hong Kong)\n        - blr: 211.3ms (Bangalore)\n        - jnb: 215.1ms (Johannesburg)\n        - sin: 223.6ms (Singapore)",
+          "timestamp": "2025-11-09T07:33:57.080631"
+        },
+        {
+          "content": "đéo hiểu làm ip qua tailscale",
+          "timestamp": "2025-11-09T07:34:17.606150"
+        },
+        {
+          "content": "nó crack mẹ quả public ip",
+          "timestamp": "2025-11-09T07:34:24.164218"
+        }
+      ],
+      "1157303608979750992": [
+        {
+          "content": "<:jerry_occho:1402169974906163300> <:jerry_occho:1402169974906163300>",
+          "timestamp": "2025-11-09T03:29:39.164886"
+        },
+        {
+          "content": "<@579122199026335755>",
+          "timestamp": "2025-11-09T03:29:40.140709"
+        },
+        {
+          "content": "Đập +5 k nhỉ",
+          "timestamp": "2025-11-09T03:30:28.673307"
+        }
+      ],
+      "579122199026335755": [
+        {
+          "content": "<:jerry_occho:1402169974906163300>",
+          "timestamp": "2025-11-09T03:29:54.043978"
+        }
+      ],
+      "1065086480734752869": [
+        {
+          "content": "odaily",
+          "timestamp": "2025-11-09T03:44:23.807325"
+        },
+        {
+          "content": "oprofile",
+          "timestamp": "2025-11-09T03:44:43.915312"
+        },
+        {
+          "content": "mệt quá",
+          "timestamp": "2025-11-09T07:08:33.711393"
+        }
+      ],
+      "815393468699639828": [
+        {
+          "content": "Chỉ tính 1 emoji duy nhất th",
+          "timestamp": "2025-11-09T03:46:57.393509"
+        },
+        {
+          "content": "Tính",
+          "timestamp": "2025-11-09T07:07:25.453272"
+        },
+        {
+          "content": "Mới có 1 slot th, thêm 7 cái emoji nữa là lên 5 rồi <@&1407212073964011631> \nDone sớm thì g.a sớm",
+          "timestamp": "2025-11-09T07:08:03.200113"
+        }
+      ],
+      "1219519962247598153": [
+        {
+          "content": "💔",
+          "timestamp": "2025-11-09T06:03:59.783833"
+        }
+      ],
+      "1268786757512728678": [
+        {
+          "content": "ltinh",
+          "timestamp": "2025-11-09T07:30:31.910662"
+        },
+        {
+          "content": "<@1344312732278591500>ê ku",
+          "timestamp": "2025-11-09T07:31:25.930526"
+        },
+        {
+          "content": "m có ny chx",
+          "timestamp": "2025-11-09T07:31:28.529363"
+        },
+        {
+          "content": "🙂",
+          "timestamp": "2025-11-09T07:31:35.292036"
+        },
+        {
+          "content": "tốt",
+          "timestamp": "2025-11-09T07:31:50.581300"
+        },
+        {
+          "content": "cu voi cac la mot",
+          "timestamp": "2025-11-09T07:32:03.226528"
+        },
+        {
+          "content": "🥸",
+          "timestamp": "2025-11-09T07:32:12.794205"
+        },
+        {
+          "content": "hiểu được đúng 3 dòng ip=))",
+          "timestamp": "2025-11-09T07:32:40.061547"
+        },
+        {
+          "content": ":v",
+          "timestamp": "2025-11-09T07:33:24.315166"
+        },
+        {
+          "content": "tốt",
+          "timestamp": "2025-11-09T07:34:04.195288"
+        }
+      ],
+      "1217373421504041000": [
+        {
+          "content": "Heh",
+          "timestamp": "2025-11-09T07:12:08.281528"
+        }
+      ],
+      "1257371882882338947": [
+        {
+          "content": "<@1344312732278591500> đĩ mẹ có đọc không",
+          "timestamp": "2025-11-09T07:26:32.573859"
+        },
+        {
+          "content": "send đi",
+          "timestamp": "2025-11-09T07:28:52.020369"
+        },
+        {
+          "content": "để t xem bọn này làm trò j",
+          "timestamp": "2025-11-09T07:28:56.214015"
+        },
+        {
+          "content": "sau khi nvidia xoá lab",
+          "timestamp": "2025-11-09T07:29:03.436373"
+        },
+        {
+          "content": "đĩ mẹ",
+          "timestamp": "2025-11-09T07:29:17.074502"
+        },
+        {
+          "content": "nhanh",
+          "timestamp": "2025-11-09T07:29:18.975461"
+        },
+        {
+          "content": "k thì mất ku",
+          "timestamp": "2025-11-09T07:29:22.750477"
+        },
+        {
+          "content": "chưa",
+          "timestamp": "2025-11-09T07:31:41.828321"
+        },
+        {
+          "content": "SEND",
+          "timestamp": "2025-11-09T07:31:47.067498"
+        },
+        {
+          "content": "MAU",
+          "timestamp": "2025-11-09T07:31:48.212499"
         }
       ]
     },
     "1421534072601186427": {
       "1344312732278591500": [
         {
-          "content": ".",
-          "timestamp": "2025-11-08T19:28:40.679047"
+          "content": "vo vo con cac",
+          "timestamp": "2025-11-09T04:25:44.980090"
         },
         {
-          "content": ".",
-          "timestamp": "2025-11-08T19:28:41.574775"
+          "content": "ai vo m",
+          "timestamp": "2025-11-09T04:25:47.131534"
         },
         {
-          "content": ".",
-          "timestamp": "2025-11-08T19:28:42.952218"
+          "content": "u",
+          "timestamp": "2025-11-09T04:26:24.266247"
+        },
+        {
+          "content": "<:joker:1436914145881755771>",
+          "timestamp": "2025-11-09T05:23:25.455531"
+        },
+        {
+          "content": "sắp hết nicho mất r",
+          "timestamp": "2025-11-09T05:36:48.464819"
+        },
+        {
+          "content": "<:__:1421667586634154037>",
+          "timestamp": "2025-11-09T05:37:31.531450"
+        },
+        {
+          "content": "mắt mèo",
+          "timestamp": "2025-11-09T07:35:15.098253"
+        },
+        {
+          "content": "mắt cu",
+          "timestamp": "2025-11-09T07:35:19.268471"
+        },
+        {
+          "content": "tròng mắt",
+          "timestamp": "2025-11-09T07:35:22.516515"
+        },
+        {
+          "content": "tròng trành",
+          "timestamp": "2025-11-09T07:35:26.566982"
+        }
+      ],
+      "1282694284545359945": [
+        {
+          "content": "https://vt.tiktok.com/ZSyCQYuof/",
+          "timestamp": "2025-11-09T03:25:15.494833"
+        }
+      ],
+      "1289498246842159126": [
+        {
+          "content": "<:__:1421667586634154037>",
+          "timestamp": "2025-11-09T03:47:44.392747"
+        },
+        {
+          "content": "Trường cửu",
+          "timestamp": "2025-11-09T07:46:15.442429"
+        },
+        {
+          "content": "Chương chướng",
+          "timestamp": "2025-11-09T07:57:07.946151"
+        },
+        {
+          "content": "<@1409403969209630853> cách fam owo",
+          "timestamp": "2025-11-09T07:57:46.680114"
+        },
+        {
+          "content": "Fack",
+          "timestamp": "2025-11-09T07:57:54.322662"
+        },
+        {
+          "content": "O cash",
+          "timestamp": "2025-11-09T07:58:22.891201"
+        },
+        {
+          "content": "O h",
+          "timestamp": "2025-11-09T07:58:23.878961"
+        },
+        {
+          "content": "O b",
+          "timestamp": "2025-11-09T07:58:24.577029"
+        },
+        {
+          "content": "O sell alll",
+          "timestamp": "2025-11-09T07:58:28.648401"
+        },
+        {
+          "content": "O sell all",
+          "timestamp": "2025-11-09T07:58:31.269121"
+        }
+      ],
+      "1279723989610266677": [
+        {
+          "content": "ơ con vợ ko để tên sa chim nx à",
+          "timestamp": "2025-11-09T04:25:25.615002"
+        },
+        {
+          "content": "ơ m ko để tên sa chim nx à",
+          "timestamp": "2025-11-09T04:26:12.177390"
+        },
+        {
+          "content": "gọi vợ cho nó tình cẻm",
+          "timestamp": "2025-11-09T04:26:22.802061"
+        }
+      ],
+      "1045300277185613896": [
+        {
+          "content": "<:nhonvoibo:1421776362171269141> <:nhonvoibo:1421776362171269141> <:nhonvoibo:1421776362171269141>",
+          "timestamp": "2025-11-09T05:21:28.781207"
+        },
+        {
+          "content": "giếp my quanh ặc gfn bờ rì mi um bờ ly",
+          "timestamp": "2025-11-09T05:21:53.113131"
+        }
+      ],
+      "1193871365917384757": [
+        {
+          "content": "<:joker:1436914145881755771>",
+          "timestamp": "2025-11-09T05:33:59.559101"
+        }
+      ],
+      "1432228296820789280": [
+        {
+          "content": "Ai hoi?",
+          "timestamp": "2025-11-09T05:37:22.141194"
+        }
+      ],
+      "1399929283228471357": [
+        {
+          "content": "Tròng mắt",
+          "timestamp": "2025-11-09T07:14:55.580339"
+        },
+        {
+          "content": "Lập trường",
+          "timestamp": "2025-11-09T07:35:47.489111"
+        },
+        {
+          "content": "Cửu chương",
+          "timestamp": "2025-11-09T07:49:55.994225"
+        }
+      ]
+    },
+    "1336708598449045534": {
+      "1406851707962392626": [
+        {
+          "content": "Cho 1000 rồi mà",
+          "timestamp": "2025-11-09T03:22:35.209601"
+        }
+      ],
+      "1217373421504041000": [
+        {
+          "content": "Hehe",
+          "timestamp": "2025-11-09T03:22:45.474225"
+        }
+      ],
+      "1001691686721835090": [
+        {
+          "content": "k buff dc",
+          "timestamp": "2025-11-09T03:37:26.276892"
+        },
+        {
+          "content": "lỏ vai",
+          "timestamp": "2025-11-09T03:37:30.295161"
+        },
+        {
+          "content": "thế nó lại giống cái này ak",
+          "timestamp": "2025-11-09T03:39:29.374874"
+        },
+        {
+          "content": "cùng function với api:)",
+          "timestamp": "2025-11-09T03:39:37.461671"
+        },
+        {
+          "content": "um",
+          "timestamp": "2025-11-09T03:40:24.877822"
+        },
+        {
+          "content": "nhưng mấy view như này để tầm tháng là bị quét sacgh",
+          "timestamp": "2025-11-09T03:41:04.512531"
+        },
+        {
+          "content": ":))",
+          "timestamp": "2025-11-09T03:42:34.587451"
+        },
+        {
+          "content": "có lm tool zefoy là ngon",
+          "timestamp": "2025-11-09T03:44:33.436911"
+        }
+      ],
+      "1163814900502630461": [
+        {
+          "content": "mạng tt buổi sáng nó thế ý",
+          "timestamp": "2025-11-09T03:38:31.019549"
+        },
+        {
+          "content": "lên chậm lắm",
+          "timestamp": "2025-11-09T03:38:34.208624"
+        },
+        {
+          "content": "buổi tối treo 15 phút đc  5k view r",
+          "timestamp": "2025-11-09T03:38:47.942761"
+        },
+        {
+          "content": "thì chả thế",
+          "timestamp": "2025-11-09T03:39:52.872664"
+        },
+        {
+          "content": "thay py bằng c cho nó nhanh hơn th",
+          "timestamp": "2025-11-09T03:40:07.851507"
+        },
+        {
+          "content": "vs cả fake nhiều hơn",
+          "timestamp": "2025-11-09T03:40:15.967151"
+        },
+        {
+          "content": "kệ đi",
+          "timestamp": "2025-11-09T03:41:29.434443"
+        },
+        {
+          "content": "để view trông cho nó đẹp =))",
+          "timestamp": "2025-11-09T03:41:37.341478"
+        }
+      ],
+      "1003584726189219911": [
+        {
+          "content": "<:7592joedead:1426781430276427817>",
+          "timestamp": "2025-11-09T03:38:54.284350"
+        }
+      ],
+      "1282694284545359945": [
+        {
+          "content": "?rto <@1228936662487269397>",
+          "timestamp": "2025-11-09T05:20:19.663303"
+        }
+      ],
+      "1213169481937846322": [
+        {
+          "content": "?ban 336954637745651732",
+          "timestamp": "2025-11-09T06:49:53.154335"
+        },
+        {
+          "content": "scam nhé",
+          "timestamp": "2025-11-09T06:49:57.898323"
+        },
+        {
+          "content": "cần proof thì dms",
+          "timestamp": "2025-11-09T06:50:06.248444"
+        }
+      ],
+      "1329105594145177690": [
+        {
+          "content": "wwat",
+          "timestamp": "2025-11-09T07:44:12.826467"
+        },
+        {
+          "content": "??",
+          "timestamp": "2025-11-09T07:44:14.965065"
+        },
+        {
+          "content": "hello",
+          "timestamp": "2025-11-09T07:44:44.002174"
+        },
+        {
+          "content": "cuối tuần hơi đơ tí",
+          "timestamp": "2025-11-09T07:44:50.635265"
+        }
+      ]
+    },
+    "0": {
+      "1344312732278591500": [
+        {
+          "content": "<@1428102676859719740>",
+          "timestamp": "2025-11-09T03:36:42.722800"
+        }
+      ],
+      "1228936662487269397": [
+        {
+          "content": "F*ck you",
+          "timestamp": "2025-11-09T04:53:41.962234"
+        }
+      ]
+    },
+    "1428694238471917631": {
+      "1289498246842159126": [
+        {
+          "content": "Hi",
+          "timestamp": "2025-11-09T03:47:03.983142"
+        }
+      ],
+      "1404343176889765899": [
+        {
+          "content": "Avt shinji dko😛🥵",
+          "timestamp": "2025-11-09T03:48:02.926244"
+        },
+        {
+          "content": "Gi v",
+          "timestamp": "2025-11-09T05:39:06.928457"
+        }
+      ],
+      "1355378320874799290": [
+        {
+          "content": "dậ",
+          "timestamp": "2025-11-09T04:05:00.559907"
+        }
+      ],
+      "1423924866226323526": [
+        {
+          "content": ":))",
+          "timestamp": "2025-11-09T04:39:21.214624"
+        }
+      ],
+      "1264848571262435369": [
+        {
+          "content": "@everyone",
+          "timestamp": "2025-11-09T05:38:17.730896"
         }
       ]
     }
   },
-  "raid_tracking": {},
-  "nuke_tracking": {},
+  "raid_tracking": {
+    "1399359840521814066": [
+      {
+        "user_id": "1219519962247598153",
+        "timestamp": "2025-11-09T06:02:33.347611"
+      },
+      {
+        "user_id": "1007157284331343872",
+        "timestamp": "2025-11-09T06:13:56.036699"
+      },
+      {
+        "user_id": "1353165429979480174",
+        "timestamp": "2025-11-09T06:15:08.864007"
+      },
+      {
+        "user_id": "1114715289238638613",
+        "timestamp": "2025-11-09T06:41:17.491919"
+      },
+      {
+        "user_id": "1268786757512728678",
+        "timestamp": "2025-11-09T07:05:00.399862"
+      }
+    ]
+  },
+  "nuke_tracking": {
+    "1336708598449045534": {
+      "235148962103951360": [
+        {
+          "action": "ban",
+          "timestamp": "2025-11-09T06:49:53.769844"
+        }
+      ]
+    }
+  },
   "command_spam_tracking": {
     "1344312732278591500": [
       {
@@ -77,6 +633,38 @@
       {
         "command": "-say",
         "timestamp": "2025-11-08T19:27:20.184896"
+      },
+      {
+        "command": "-help",
+        "timestamp": "2025-11-09T03:51:30.807970"
+      },
+      {
+        "command": "-security",
+        "timestamp": "2025-11-09T03:51:41.978635"
+      },
+      {
+        "command": "-warn",
+        "timestamp": "2025-11-09T03:52:06.000963"
+      },
+      {
+        "command": "-warning",
+        "timestamp": "2025-11-09T03:52:11.836439"
+      },
+      {
+        "command": "-warning",
+        "timestamp": "2025-11-09T03:52:18.373873"
+      },
+      {
+        "command": "-rto",
+        "timestamp": "2025-11-09T03:52:38.772546"
+      },
+      {
+        "command": "-say",
+        "timestamp": "2025-11-09T06:58:07.809578"
+      },
+      {
+        "command": "--qr-format",
+        "timestamp": "2025-11-09T07:33:57.080853"
       }
     ]
   },
