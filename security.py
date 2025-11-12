@@ -113,11 +113,14 @@ class SecurityManager:
         
         guild_id = str(message.guild.id)
         user_id = str(message.author.id)
+        channel_id = str(message.channel.id)
         
-        # Skip if anti-spam is disabled or user is whitelisted
+        # Skip if anti-spam is disabled, user is whitelisted, or channel is whitelisted
         if not self.data.get_security_setting(guild_id, "anti_spam_enabled", True):
             return None
         if self.data.is_whitelisted(guild_id, user_id):
+            return None
+        if self.data.is_channel_whitelisted(guild_id, channel_id):
             return None
         
         # Track the message
@@ -150,11 +153,20 @@ class SecurityManager:
         
         # Check duplicate messages
         if len(recent_messages) >= SPAM_DUPLICATE_THRESHOLD:
-            last_messages = [msg["content"] for msg in recent_messages[-SPAM_DUPLICATE_THRESHOLD:]]
-            if len(set(last_messages)) == 1 and message.content == last_messages[0]:
+            # Get normalized content of recent messages (lowercase, strip punctuation)
+            import re
+            def normalize_content(text):
+                # Remove punctuation, extra spaces, and convert to lowercase
+                return re.sub(r'[^\w\s]', '', text).lower().strip()
+                
+            last_messages = [normalize_content(msg["content"]) for msg in recent_messages[-SPAM_DUPLICATE_THRESHOLD:]]
+            current_normalized = normalize_content(message.content)
+            
+            # If all normalized messages are the same, count as spam
+            if len(set(last_messages)) == 1 and current_normalized == last_messages[0] and current_normalized != "":
                 return {
                     "type": "duplicate_spam",
-                    "reason": f"Repeated the same message {SPAM_DUPLICATE_THRESHOLD} times",
+                    "reason": f"Repeated similar messages {SPAM_DUPLICATE_THRESHOLD} times",
                     "severity": "medium"
                 }
         
@@ -341,11 +353,14 @@ class SecurityManager:
         
         guild_id = str(message.guild.id)
         user_id = str(message.author.id)
+        channel_id = str(message.channel.id)
         
-        # Skip if auto-mod is disabled or user is whitelisted
+        # Skip if auto-mod is disabled, user is whitelisted, or channel is whitelisted
         if not self.data.get_security_setting(guild_id, "auto_mod_enabled", True):
             return None
         if self.data.is_whitelisted(guild_id, user_id):
+            return None
+        if self.data.is_channel_whitelisted(guild_id, channel_id):
             return None
         
         content = message.content

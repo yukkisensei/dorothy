@@ -8,7 +8,7 @@ from typing import List
 
 # ==================== BOT CONFIGURATION ====================
 BOT_NAME = "Dorothy"
-VERSION = "3.0"
+VERSION = "3.1"
 PREFIX = "-"
 
 # ==================== OWNER CONFIGURATION ====================
@@ -75,17 +75,17 @@ RAID_DETECTION_WINDOW = 10  # Seconds
 RAID_MIN_ACCOUNT_AGE = 7  # Days
 
 # Anti-Spam Settings
-SPAM_MESSAGE_THRESHOLD = 5  # Messages within time window
+SPAM_MESSAGE_THRESHOLD = 10  # Messages within time window
 SPAM_TIME_WINDOW = 10  # Seconds
-SPAM_MENTION_THRESHOLD = 5  # Max mentions per message
-SPAM_DUPLICATE_THRESHOLD = 3  # Same message repeated
+SPAM_MENTION_THRESHOLD = 10  # Max mentions per message
+SPAM_DUPLICATE_THRESHOLD = 10  # Same message repeated
 
 # Command Spam Settings
-COMMAND_SPAM_THRESHOLD = 5  # Commands within time window
+COMMAND_SPAM_THRESHOLD = 10  # Commands within time window
 COMMAND_SPAM_WINDOW = 10  # Seconds
 
 # DM Spam Settings
-DM_SPAM_THRESHOLD = 5  # DMs within time window
+DM_SPAM_THRESHOLD = 10  # DMs within time window
 DM_SPAM_WINDOW = 30  # Seconds
 
 # Anti-Nuke Settings

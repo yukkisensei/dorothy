@@ -67,6 +67,7 @@ class DataManager:
                 "anti_nuke_enabled": {},
                 "auto_mod_enabled": {},
                 "whitelisted_users": {},
+                "whitelisted_channels": {},
                 "blacklisted_words": {},
                 "trusted_roles": {},
                 "security_logs": {}
@@ -172,6 +173,31 @@ class DataManager:
         guild_id, user_id = str(guild_id), str(user_id)
         if guild_id in self.data["security"]["whitelisted_users"]:
             return user_id in self.data["security"]["whitelisted_users"][guild_id]
+        return False
+        
+    # ==================== CHANNEL WHITELIST SYSTEM ====================
+    def add_whitelist_channel(self, guild_id: str, channel_id: str):
+        """Add channel to whitelist (immune to security checks)"""
+        guild_id, channel_id = str(guild_id), str(channel_id)
+        if guild_id not in self.data["security"]["whitelisted_channels"]:
+            self.data["security"]["whitelisted_channels"][guild_id] = []
+        if channel_id not in self.data["security"]["whitelisted_channels"][guild_id]:
+            self.data["security"]["whitelisted_channels"][guild_id].append(channel_id)
+            self.save_data()
+    
+    def remove_whitelist_channel(self, guild_id: str, channel_id: str):
+        """Remove channel from whitelist"""
+        guild_id, channel_id = str(guild_id), str(channel_id)
+        if guild_id in self.data["security"]["whitelisted_channels"]:
+            if channel_id in self.data["security"]["whitelisted_channels"][guild_id]:
+                self.data["security"]["whitelisted_channels"][guild_id].remove(channel_id)
+                self.save_data()
+    
+    def is_channel_whitelisted(self, guild_id: str, channel_id: str) -> bool:
+        """Check if channel is whitelisted (immune to security checks)"""
+        guild_id, channel_id = str(guild_id), str(channel_id)
+        if guild_id in self.data["security"]["whitelisted_channels"]:
+            return channel_id in self.data["security"]["whitelisted_channels"][guild_id]
         return False
     
     # ==================== BLACKLIST WORDS ====================

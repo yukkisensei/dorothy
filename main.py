@@ -1,7 +1,7 @@
 """
 Dorothy Bot - Main Entry Point
 Discord security bot with AI features
-Version 3.0
+Version 3.1
 """
 
 import sys

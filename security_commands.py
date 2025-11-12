@@ -173,6 +173,33 @@ def setup_commands(bot: commands.Bot):
             else:
                 data_manager.add_whitelist(guild_id, user_id)
                 await ctx.send(get_text(guild_id, "whitelist_added", user=member.mention))
+                
+    @bot.command(name='whitelistchannel', aliases=['wlc'])
+    @has_admin_permissions()
+    async def whitelist_channel(ctx, channel: discord.TextChannel = None, action: str = "add"):
+        """Add/remove channel from whitelist / Thêm/xóa kênh khỏi whitelist"""
+        from localization import get_text
+        guild_id = str(ctx.guild.id)
+        
+        if channel is None:
+            channel = ctx.channel
+        
+        channel_id = str(channel.id)
+        
+        if action.lower() in ['add', 'thêm', '+']:
+            data_manager.add_whitelist_channel(guild_id, channel_id)
+            await ctx.send(get_text(guild_id, "whitelist_channel_added", channel=channel.mention))
+        elif action.lower() in ['remove', 'xóa', '-', 'rm']:
+            data_manager.remove_whitelist_channel(guild_id, channel_id)
+            await ctx.send(get_text(guild_id, "whitelist_channel_removed", channel=channel.mention))
+        else:
+            # Toggle
+            if data_manager.is_channel_whitelisted(guild_id, channel_id):
+                data_manager.remove_whitelist_channel(guild_id, channel_id)
+                await ctx.send(get_text(guild_id, "whitelist_channel_removed", channel=channel.mention))
+            else:
+                data_manager.add_whitelist_channel(guild_id, channel_id)
+                await ctx.send(get_text(guild_id, "whitelist_channel_added", channel=channel.mention))
     
     @bot.command(name='blacklist', aliases=['bl'])
     @has_admin_permissions()

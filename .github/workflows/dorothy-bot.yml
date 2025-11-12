@@ -70,14 +70,34 @@ jobs:
       run: |
         curl -H "Content-Type: application/json" -d '{"embeds":[{"title":"❌ Dorothy Bot Error","description":"Workflow failed or timed out. Retriggering...","color":16711680,"timestamp":"'$(date -u +%Y-%m-%dT%H:%M:%S.000Z)'"}]}' ${{ secrets.DISCORD_WEBHOOK_URL }}
     
-    - name: Re-trigger workflow on timeout or error only
-      if: failure()
+    - name: Re-trigger workflow on timeout, error, or 6-hour limit
+      if: failure() || success()
       uses: actions/github-script@v6
       with:
         script: |
-          await github.rest.actions.createWorkflowDispatch({
+          const run = await github.rest.actions.getWorkflowRun({
             owner: context.repo.owner,
             repo: context.repo.repo,
-            workflow_id: 'dorothy-bot.yml',
-            ref: 'main'
-          })
+            run_id: context.runId
+          });
+          
+          // Get current run duration in hours
+          const startTime = new Date(run.data.created_at).getTime();
+          const currentTime = new Date().getTime();
+          const durationHours = (currentTime - startTime) / (1000 * 60 * 60);
+          
+          // Only create a new workflow if:
+          // 1. Current run failed (captured by failure() condition), OR
+          // 2. The run has been running for at least 6 hours AND we're not manually stopped
+          //    (manual cancellations will have conclusion = 'cancelled')
+          if (run.data.conclusion !== 'cancelled' && (durationHours >= 5.9 || run.data.conclusion === 'failure')) {
+            console.log(`Creating new workflow: ${run.data.conclusion === 'failure' ? 'Due to failure' : 'Due to 6-hour runtime'}`)
+            await github.rest.actions.createWorkflowDispatch({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              workflow_id: 'dorothy-bot.yml',
+              ref: 'main'
+            });
+          } else {
+            console.log('Not creating new workflow - either manually cancelled or not reached time limit yet');
+          }
