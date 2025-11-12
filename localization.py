@@ -85,12 +85,12 @@ TRANSLATIONS = {
         "help_kickban": "🔨 **Kick/Ban**",
         "help_kickban_desc": "`-kick @user [reason]` - Kick member\n`-ban @user [reason]` - Ban member\n`-unban <user_id>` - Unban member",
         "help_security": "🛡️ **Security**",
-        "help_security_desc": "`-security` - View security status\n`-antinuke [on/off]` - Anti-nuke protection\n`-antiraid [on/off]` - Anti-raid protection\n`-antispam [on/off]` - Anti-spam protection\n`-automod [on/off]` - Auto-moderation\n`-whitelist @user` - Add to whitelist\n`-blacklist [add/remove] <word>` - Manage blacklist",
+        "help_security_desc": "`-security` - View security status\n`-antinuke [on/off]` - Anti-nuke protection\n`-antiraid [on/off]` - Anti-raid protection\n`-antispam [on/off]` - Anti-spam protection\n`-automod [on/off]` - Auto-moderation\n`-whitelist @user` - Add user to whitelist\n`-whitelistchannel [#channel]` - Add channel to whitelist (immune zone)\n`-blacklist [add/remove] <word>` - Manage blacklist",
         "help_utility": "🛠️ **Utility**",
         "help_utility_desc": "`-clear [amount]` - Delete messages\n`-lock [#channel]` - Lock channel\n`-unlock [#channel]` - Unlock channel\n`-slowmode [seconds]` - Set slowmode",
         "help_info": "📊 **Information**",
         "help_info_desc": "`-serverinfo` - Server info\n`-userinfo [@user]` - User info\n`-ping` - Check latency\n`-setprefix <prefix>` - Change prefix",
-        "help_footer": "Dorothy v3.2 | Prefix: {prefix}",
+        "help_footer": "Dorothy v3.1 | Prefix: {prefix}",
         
         # Server info
         "serverinfo_title": "📊 Information for {name}",
@@ -153,6 +153,11 @@ TRANSLATIONS = {
         "whitelist_usage": "❌ Use: `-whitelist @user [add/remove]`",
         "whitelist_added": "✅ Added {user} to whitelist! This user will not be affected by auto-mod.",
         "whitelist_removed": "✅ Removed {user} from whitelist!",
+        
+        # Channel Whitelist
+        "whitelist_channel_usage": "❌ Use: `-whitelistchannel [#channel] [add/remove]`",
+        "whitelist_channel_added": "✅ Added {channel} to whitelist! This channel is now an immune zone for security checks.",
+        "whitelist_channel_removed": "✅ Removed {channel} from whitelist!",
         
         # Blacklist
         "blacklist_title": "📋 Blacklisted Words",
@@ -278,12 +283,12 @@ TRANSLATIONS = {
         "help_kickban": "🔨 **Kick/Ban**",
         "help_kickban_desc": "`-kick @user [lý do]` - Kick thành viên\n`-ban @user [lý do]` - Ban thành viên\n`-unban <user_id>` - Unban thành viên",
         "help_security": "🛡️ **Bảo mật**",
-        "help_security_desc": "`-security` - Xem trạng thái bảo mật\n`-antinuke [on/off]` - Chống nuke\n`-antiraid [on/off]` - Chống raid\n`-antispam [on/off]` - Chống spam\n`-automod [on/off]` - Tự động kiểm duyệt\n`-whitelist @user` - Thêm whitelist\n`-blacklist [add/remove] <từ>` - Quản lý blacklist",
+        "help_security_desc": "`-security` - Xem trạng thái bảo mật\n`-antinuke [on/off]` - Chống nuke\n`-antiraid [on/off]` - Chống raid\n`-antispam [on/off]` - Chống spam\n`-automod [on/off]` - Tự động kiểm duyệt\n`-whitelist @user` - Thêm user vào whitelist\n`-whitelistchannel [#kênh]` - Thêm kênh vào whitelist (vùng miễn nhiễm)\n`-blacklist [add/remove] <từ>` - Quản lý blacklist",
         "help_utility": "🛠️ **Tiện ích**",
         "help_utility_desc": "`-clear [số]` - Xóa tin nhắn\n`-lock [#kênh]` - Khóa kênh\n`-unlock [#kênh]` - Mở khóa kênh\n`-slowmode [giây]` - Đặt slowmode",
         "help_info": "📊 **Thông tin**",
         "help_info_desc": "`-serverinfo` - Thông tin server\n`-userinfo [@user]` - Thông tin user\n`-ping` - Kiểm tra độ trễ\n`-setprefix <prefix>` - Đổi prefix",
-        "help_footer": "Dorothy v3.2 | Prefix: {prefix}",
+        "help_footer": "Dorothy v3.1 | Prefix: {prefix}",
         
         # Server info
         "serverinfo_title": "📊 Thông tin {name}",
@@ -346,6 +351,11 @@ TRANSLATIONS = {
         "whitelist_usage": "❌ Sử dụng: `-whitelist @user [add/remove]`",
         "whitelist_added": "✅ Đã thêm {user} vào whitelist! User này sẽ không bị ảnh hưởng bởi auto-mod.",
         "whitelist_removed": "✅ Đã xóa {user} khỏi whitelist!",
+        
+        # Channel Whitelist
+        "whitelist_channel_usage": "❌ Sử dụng: `-whitelistchannel [#kênh] [add/remove]`",
+        "whitelist_channel_added": "✅ Đã thêm {channel} vào whitelist! Kênh này trở thành vùng miễn nhiễm với các kiểm tra bảo mật.",
+        "whitelist_channel_removed": "✅ Đã xóa {channel} khỏi whitelist!",
         
         # Blacklist
         "blacklist_title": "📋 Danh sách từ cấm",

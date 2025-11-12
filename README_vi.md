@@ -32,6 +32,7 @@ Bot bảo mật và kiểm duyệt chuyên nghiệp cho Discord với tính năn
 - Ngăn chặn spam mention
 - Cảnh báo và trừng phạt tự động
 - Theo dõi thông minh từng người dùng
+- Whitelist kênh cho vùng miễn nhiễm
 
 #### Tự động Kiểm duyệt (Auto-Mod)
 - Lọc từ ngữ cấm
@@ -132,7 +133,8 @@ dorothy/
 - `-antiraid [on/off]` - Bật/tắt chống raid
 - `-antispam [on/off]` - Bật/tắt chống spam
 - `-automod [on/off]` - Bật/tắt tự động kiểm duyệt
-- `-whitelist @user [add/remove]` - Quản lý whitelist
+- `-whitelist @user [add/remove]` - Quản lý whitelist người dùng
+- `-whitelistchannel [#channel] [add/remove]` - Quản lý whitelist kênh (vùng miễn nhiễm)
 - `-blacklist [add/remove] <từ>` - Quản lý danh sách từ cấm
 
 ### ⚠️ Hệ thống Cảnh báo
@@ -194,7 +196,7 @@ Tất cả tính năng bảo mật được bật mặc định và có thể b�
 Sửa `config.py` để điều chỉnh ngưỡng phát hiện:
 ```python
 RAID_DETECTION_THRESHOLD = 5  # Số lần join trong cửa sổ thời gian
-SPAM_MESSAGE_THRESHOLD = 5    # Tin nhắn trong cửa sổ thời gian
+SPAM_MESSAGE_THRESHOLD = 10   # Tin nhắn trong cửa sổ thời gian
 NUKE_BAN_THRESHOLD = 3        # Số ban được phát hiện
 ```
 
@@ -302,4 +304,4 @@ Tất cả dữ liệu được lưu trong `dorothy_data.json`:
 Bot được cung cấp để sử dụng cá nhân và thương mại. Thoải mái chỉnh sửa và phân phối.
 
 ---
-*Dorothy - Bot Bảo mật & Kiểm duyệt Discord Nâng cao v3.2*
+*Dorothy - Bot Bảo mật & Kiểm duyệt Discord Nâng cao v3.1*

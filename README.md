@@ -32,6 +32,7 @@ A professional security and moderation bot for Discord servers with AI-powered f
 - Mention spam prevention
 - Automatic warnings and punishments
 - Smart tracking per user
+- Channel whitelist for immune zones
 
 #### Auto-Moderation
 - Blacklisted word filtering
@@ -132,7 +133,8 @@ dorothy/
 - `-antiraid [on/off]` - Toggle anti-raid protection
 - `-antispam [on/off]` - Toggle anti-spam protection
 - `-automod [on/off]` - Toggle auto-moderation
-- `-whitelist @user [add/remove]` - Manage whitelist
+- `-whitelist @user [add/remove]` - Manage user whitelist
+- `-whitelistchannel [#channel] [add/remove]` - Manage channel whitelist (immune zones)
 - `-blacklist [add/remove] <word>` - Manage blacklisted words
 
 ### ⚠️ Warning System
@@ -203,7 +205,7 @@ All security features are enabled by default and can be toggled per server:
 Edit `config.py` to adjust detection thresholds:
 ```python
 RAID_DETECTION_THRESHOLD = 5  # Joins in time window
-SPAM_MESSAGE_THRESHOLD = 5    # Messages in time window
+SPAM_MESSAGE_THRESHOLD = 10   # Messages in time window
 NUKE_BAN_THRESHOLD = 3        # Multiple bans detected
 ```
 
@@ -311,4 +313,4 @@ All data is stored in `dorothy_data.json`:
 This bot is provided as-is for personal and commercial use. Modify and distribute freely.
 
 ---
-*Dorothy - Advanced Discord Security & Moderation Bot v3.2*
+*Dorothy - Advanced Discord Security & Moderation Bot v3.1*
