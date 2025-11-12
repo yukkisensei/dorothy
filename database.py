@@ -48,6 +48,10 @@ class DataManager:
         # Add log_channels if missing
         if "log_channels" not in data:
             data["log_channels"] = {}
+            
+        # Add whitelisted_channels if missing in security section
+        if "security" in data and "whitelisted_channels" not in data["security"]:
+            data["security"]["whitelisted_channels"] = {}
         
         return data
     

@@ -120,8 +120,14 @@ class SecurityManager:
             return None
         if self.data.is_whitelisted(guild_id, user_id):
             return None
-        if self.data.is_channel_whitelisted(guild_id, channel_id):
-            return None
+            
+        # Safely check if channel is whitelisted
+        try:
+            if self.data.is_channel_whitelisted(guild_id, channel_id):
+                return None
+        except KeyError:
+            # If whitelisted_channels doesn't exist yet, just continue
+            pass
         
         # Track the message
         recent_messages = self.data.track_message(guild_id, user_id, message.content)
@@ -360,8 +366,14 @@ class SecurityManager:
             return None
         if self.data.is_whitelisted(guild_id, user_id):
             return None
-        if self.data.is_channel_whitelisted(guild_id, channel_id):
-            return None
+            
+        # Safely check if channel is whitelisted
+        try:
+            if self.data.is_channel_whitelisted(guild_id, channel_id):
+                return None
+        except KeyError:
+            # If whitelisted_channels doesn't exist yet, just continue
+            pass
         
         content = message.content
         
