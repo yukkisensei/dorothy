@@ -43,7 +43,8 @@
   "security": {
     "anti_raid_enabled": {},
     "anti_spam_enabled": {
-      "1399359840521814066": true
+      "1399359840521814066": true,
+      "1421534072601186427": false
     },
     "anti_nuke_enabled": {},
     "auto_mod_enabled": {},
@@ -244,6 +245,17 @@
             "user_id": "1344312732278591500",
             "type": "message_spam",
             "reason": "Sent 5 messages in 10 seconds",
+            "severity": "medium",
+            "action": "muted_7days"
+          }
+        },
+        {
+          "type": "spam_detected",
+          "timestamp": "2025-11-12T14:20:05.739469",
+          "details": {
+            "user_id": "1344312732278591500",
+            "type": "duplicate_spam",
+            "reason": "Repeated the same message 3 times",
             "severity": "medium",
             "action": "muted_7days"
           }
@@ -1314,6 +1326,18 @@
         {
           "content": "https://vt.tiktok.com/ZSyCQYuof/",
           "timestamp": "2025-11-09T03:25:15.494833"
+        },
+        {
+          "content": "<@1344312732278591500>",
+          "timestamp": "2025-11-12T11:58:56.457707"
+        },
+        {
+          "content": "",
+          "timestamp": "2025-11-12T14:14:54.883925"
+        },
+        {
+          "content": "ô a liêm",
+          "timestamp": "2025-11-12T14:14:58.591888"
         }
       ],
       "1279723989610266677": [
@@ -1416,86 +1440,86 @@
       ],
       "1432228296820789280": [
         {
-          "content": "Khớp tay",
-          "timestamp": "2025-11-10T13:52:16.531465"
+          "content": "<:joker:1436914145881755771>",
+          "timestamp": "2025-11-12T12:40:17.351058"
+        },
+        {
+          "content": "Odaily",
+          "timestamp": "2025-11-12T13:27:32.508719"
+        },
+        {
+          "content": "Os all",
+          "timestamp": "2025-11-12T13:27:36.138360"
+        },
+        {
+          "content": "Ocf all",
+          "timestamp": "2025-11-12T13:27:37.992273"
+        },
+        {
+          "content": "Lợm thợm",
+          "timestamp": "2025-11-12T14:08:14.367531"
+        },
+        {
+          "content": "Phòng khách",
+          "timestamp": "2025-11-12T14:09:53.560142"
+        },
+        {
+          "content": "Xoà loà",
+          "timestamp": "2025-11-12T14:18:46.052755"
+        },
+        {
+          "content": "Loà xoà",
+          "timestamp": "2025-11-12T14:18:58.087172"
         },
         {
           "content": "<:joker:1436914145881755771>",
-          "timestamp": "2025-11-10T13:52:23.792189"
+          "timestamp": "2025-11-12T14:19:05.757461"
         },
         {
-          "content": "Khớp hông",
-          "timestamp": "2025-11-10T13:52:34.150257"
-        },
-        {
-          "content": "<:m_goi_gi:1421573318510772494>",
-          "timestamp": "2025-11-10T13:52:41.116969"
-        },
-        {
-          "content": "Gối ôm anine wibu",
-          "timestamp": "2025-11-10T13:52:54.724999"
-        },
-        {
-          "content": "<:joker:1436914145881755771>",
-          "timestamp": "2025-11-10T13:53:03.021152"
-        },
-        {
-          "content": "Gối ôm",
-          "timestamp": "2025-11-10T13:53:13.378465"
-        },
-        {
-          "content": "Chầm hương",
-          "timestamp": "2025-11-10T13:53:43.691790"
-        },
-        {
-          "content": "Chầm chầm",
-          "timestamp": "2025-11-10T13:53:49.757702"
-        },
-        {
-          "content": "Huh.",
-          "timestamp": "2025-11-11T13:30:34.848382"
+          "content": "Màn hình",
+          "timestamp": "2025-11-12T14:21:24.166965"
         }
       ],
       "1399929283228471357": [
         {
-          "content": "Rợ rợ",
-          "timestamp": "2025-11-10T13:07:12.612932"
+          "content": "Bruh",
+          "timestamp": "2025-11-12T14:19:14.104498"
         },
         {
-          "content": "Rợ cháy",
-          "timestamp": "2025-11-10T13:07:19.617116"
+          "content": "Đứng hình",
+          "timestamp": "2025-11-12T14:19:21.554059"
         },
         {
-          "content": "Rợ người",
-          "timestamp": "2025-11-10T13:07:49.231592"
+          "content": "Đứng tim",
+          "timestamp": "2025-11-12T14:19:27.718126"
         },
         {
-          "content": "Cách biệt",
-          "timestamp": "2025-11-10T13:07:56.795533"
+          "content": "Đập nhanh",
+          "timestamp": "2025-11-12T14:19:43.697020"
         },
         {
-          "content": "Thự sự",
-          "timestamp": "2025-11-10T13:08:27.745923"
+          "content": "Đầy đặn",
+          "timestamp": "2025-11-12T14:20:01.907085"
         },
         {
-          "content": "Thự lương",
-          "timestamp": "2025-11-10T13:08:36.769134"
+          "content": "<:__:1421667586634154037>",
+          "timestamp": "2025-11-12T14:20:25.998116"
         },
         {
-          "content": "Thự kho",
-          "timestamp": "2025-11-10T13:08:46.416716"
+          "content": "Hạ màn",
+          "timestamp": "2025-11-12T14:21:17.759956"
         },
         {
-          "content": "Thự lự",
-          "timestamp": "2025-11-10T13:08:55.285404"
+          "content": "Hình dung",
+          "timestamp": "2025-11-12T14:21:29.342732"
         },
         {
-          "content": "<:dead:1434880002318401546>",
-          "timestamp": "2025-11-10T13:09:06.857154"
+          "content": "Dung nhan",
+          "timestamp": "2025-11-12T14:21:55.974946"
         },
         {
-          "content": "Xấu xí",
-          "timestamp": "2025-11-12T08:18:02.045031"
+          "content": "Dăng dăng",
+          "timestamp": "2025-11-12T14:22:13.495342"
         }
       ],
       "1327092173627195514": [
@@ -1578,44 +1602,44 @@
       ],
       "1289498246842159126": [
         {
-          "content": "Nhảy nhót",
-          "timestamp": "2025-11-10T14:07:38.346492"
+          "content": "Qua quýt",
+          "timestamp": "2025-11-12T14:16:29.375145"
         },
         {
-          "content": "<:nhonvoibo:1421776362171269141>",
-          "timestamp": "2025-11-10T14:07:45.698423"
+          "content": "Đồng áng",
+          "timestamp": "2025-11-12T14:16:50.497996"
         },
         {
-          "content": "dafk học",
-          "timestamp": "2025-11-10T14:09:27.567066"
+          "content": "Mù lòa",
+          "timestamp": "2025-11-12T14:18:02.855967"
         },
         {
-          "content": "Oh",
-          "timestamp": "2025-11-10T15:06:52.493380"
+          "content": "Lòa xòa",
+          "timestamp": "2025-11-12T14:18:28.921201"
         },
         {
-          "content": "dafk null",
-          "timestamp": "2025-11-10T15:07:07.994892"
+          "content": "Lòa xòa",
+          "timestamp": "2025-11-12T14:19:08.537938"
         },
         {
-          "content": "Nhót nhịt",
-          "timestamp": "2025-11-11T14:43:55.221858"
+          "content": "Đập tràn",
+          "timestamp": "2025-11-12T14:19:51.993700"
         },
         {
-          "content": "Nhót nhọt",
-          "timestamp": "2025-11-11T14:44:01.406728"
+          "content": "Đầy ấp",
+          "timestamp": "2025-11-12T14:20:02.218895"
         },
         {
-          "content": "Nhót nhota",
-          "timestamp": "2025-11-11T14:45:56.895469"
+          "content": "Khai hạ",
+          "timestamp": "2025-11-12T14:21:10.846130"
         },
         {
-          "content": "Nhót nhót",
-          "timestamp": "2025-11-11T14:46:03.430664"
+          "content": "Dung dăng",
+          "timestamp": "2025-11-12T14:22:04.506321"
         },
         {
-          "content": "Nhót ra",
-          "timestamp": "2025-11-11T14:46:32.055016"
+          "content": "Dăng Dẳng",
+          "timestamp": "2025-11-12T14:22:56.494832"
         }
       ],
       "1298987913622847499": [
@@ -1755,18 +1779,52 @@
           "content": "Rating 16.00 when",
           "timestamp": "2025-11-12T09:15:20.060256"
         }
+      ],
+      "1344312732278591500": [
+        {
+          "content": "ai nhắn thử j đi",
+          "timestamp": "2025-11-12T14:20:18.848733"
+        },
+        {
+          "content": "<:uoivaicalon:1421546294211641427>",
+          "timestamp": "2025-11-12T14:20:21.627688"
+        },
+        {
+          "content": "=))))",
+          "timestamp": "2025-11-12T14:20:31.675072"
+        },
+        {
+          "content": "-unlock",
+          "timestamp": "2025-11-12T14:20:36.508917"
+        },
+        {
+          "content": "ae",
+          "timestamp": "2025-11-12T14:22:43.156218"
+        },
+        {
+          "content": "t nên",
+          "timestamp": "2025-11-12T14:22:44.959408"
+        },
+        {
+          "content": "code tiếp",
+          "timestamp": "2025-11-12T14:22:47.316332"
+        },
+        {
+          "content": "project nào",
+          "timestamp": "2025-11-12T14:22:50.131915"
+        },
+        {
+          "content": "à quên",
+          "timestamp": "2025-11-12T14:22:55.537867"
+        },
+        {
+          "content": "-antispam off",
+          "timestamp": "2025-11-12T14:23:00.521436"
+        }
       ]
     },
     "1336708598449045534": {
       "1406851707962392626": [
-        {
-          "content": "rooi do",
-          "timestamp": "2025-11-11T13:34:27.118657"
-        },
-        {
-          "content": "<@1437102067838746705>",
-          "timestamp": "2025-11-11T13:34:41.842054"
-        },
         {
           "content": "co api khum <@1003584726189219911>",
           "timestamp": "2025-11-11T14:46:35.971902"
@@ -1798,6 +1856,14 @@
         {
           "content": "",
           "timestamp": "2025-11-12T09:51:54.589296"
+        },
+        {
+          "content": "Ok <@1380084257631895725>",
+          "timestamp": "2025-11-12T12:26:27.947351"
+        },
+        {
+          "content": "<@1380084257631895725> setup xong domain chưa",
+          "timestamp": "2025-11-12T13:15:53.621374"
         }
       ],
       "1217373421504041000": [
@@ -2180,6 +2246,14 @@
         {
           "content": "dms đi",
           "timestamp": "2025-11-12T05:42:25.072161"
+        },
+        {
+          "content": "stop ping i",
+          "timestamp": "2025-11-12T13:17:01.662593"
+        },
+        {
+          "content": "mai tính",
+          "timestamp": "2025-11-12T13:17:03.083758"
         }
       ],
       "987568324714041354": [
@@ -2422,6 +2496,10 @@
         {
           "content": "A",
           "timestamp": "2025-11-09T14:30:18.494013"
+        },
+        {
+          "content": "-# ⓘ Tài khoản này quá đẳng cấp nên dịch vụ của chúng tôi đã cấm tài khoản này",
+          "timestamp": "2025-11-12T14:20:49.187472"
         }
       ],
       "1396855106271576147": [
@@ -2631,18 +2709,6 @@
   "command_spam_tracking": {
     "1344312732278591500": [
       {
-        "command": "-rto",
-        "timestamp": "2025-11-11T13:31:30.149431"
-      },
-      {
-        "command": "-rto",
-        "timestamp": "2025-11-11T14:14:00.634140"
-      },
-      {
-        "command": "-rto",
-        "timestamp": "2025-11-11T15:11:58.328745"
-      },
-      {
         "command": "-antispam",
         "timestamp": "2025-11-12T05:49:06.450452"
       },
@@ -2669,6 +2735,18 @@
       {
         "command": "-rto",
         "timestamp": "2025-11-12T10:41:23.225239"
+      },
+      {
+        "command": "-lock",
+        "timestamp": "2025-11-12T14:20:07.374273"
+      },
+      {
+        "command": "-unlock",
+        "timestamp": "2025-11-12T14:20:36.508977"
+      },
+      {
+        "command": "-antispam",
+        "timestamp": "2025-11-12T14:23:00.521497"
       }
     ],
     "1298987913622847499": [
@@ -2717,6 +2795,12 @@
       {
         "command": "/help",
         "timestamp": "2025-11-12T10:19:09.860848"
+      }
+    ],
+    "1132172174447345704": [
+      {
+        "command": "-#",
+        "timestamp": "2025-11-12T14:20:49.187533"
       }
     ]
   },
