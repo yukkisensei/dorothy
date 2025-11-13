@@ -44,7 +44,7 @@
     "anti_raid_enabled": {},
     "anti_spam_enabled": {
       "1399359840521814066": true,
-      "1421534072601186427": false
+      "1421534072601186427": true
     },
     "anti_nuke_enabled": {},
     "auto_mod_enabled": {},
@@ -256,6 +256,17 @@
             "user_id": "1344312732278591500",
             "type": "duplicate_spam",
             "reason": "Repeated the same message 3 times",
+            "severity": "medium",
+            "action": "muted_7days"
+          }
+        },
+        {
+          "type": "spam_detected",
+          "timestamp": "2025-11-13T01:06:49.399903",
+          "details": {
+            "user_id": "1344312732278591500",
+            "type": "message_spam",
+            "reason": "Sent 10 messages in 10 seconds",
             "severity": "medium",
             "action": "muted_7days"
           }
@@ -634,7 +645,8 @@
           }
         }
       ]
-    }
+    },
+    "whitelisted_channels": {}
   },
   "spam_tracking": {
     "1399359840521814066": {
@@ -1782,44 +1794,44 @@
       ],
       "1344312732278591500": [
         {
-          "content": "ai nhắn thử j đi",
-          "timestamp": "2025-11-12T14:20:18.848733"
+          "content": ".",
+          "timestamp": "2025-11-13T01:06:39.875182"
         },
         {
-          "content": "<:uoivaicalon:1421546294211641427>",
-          "timestamp": "2025-11-12T14:20:21.627688"
+          "content": ".",
+          "timestamp": "2025-11-13T01:06:40.664312"
         },
         {
-          "content": "=))))",
-          "timestamp": "2025-11-12T14:20:31.675072"
+          "content": ".",
+          "timestamp": "2025-11-13T01:06:41.497465"
         },
         {
-          "content": "-unlock",
-          "timestamp": "2025-11-12T14:20:36.508917"
+          "content": ".",
+          "timestamp": "2025-11-13T01:06:42.404231"
         },
         {
-          "content": "ae",
-          "timestamp": "2025-11-12T14:22:43.156218"
+          "content": ".",
+          "timestamp": "2025-11-13T01:06:43.096122"
         },
         {
-          "content": "t nên",
-          "timestamp": "2025-11-12T14:22:44.959408"
+          "content": ".",
+          "timestamp": "2025-11-13T01:06:44.483649"
         },
         {
-          "content": "code tiếp",
-          "timestamp": "2025-11-12T14:22:47.316332"
+          "content": ".",
+          "timestamp": "2025-11-13T01:06:45.405252"
         },
         {
-          "content": "project nào",
-          "timestamp": "2025-11-12T14:22:50.131915"
+          "content": ".",
+          "timestamp": "2025-11-13T01:06:46.315936"
         },
         {
-          "content": "à quên",
-          "timestamp": "2025-11-12T14:22:55.537867"
+          "content": ".",
+          "timestamp": "2025-11-13T01:06:47.105603"
         },
         {
-          "content": "-antispam off",
-          "timestamp": "2025-11-12T14:23:00.521436"
+          "content": ".",
+          "timestamp": "2025-11-13T01:06:48.115719"
         }
       ]
     },
@@ -2709,10 +2721,6 @@
   "command_spam_tracking": {
     "1344312732278591500": [
       {
-        "command": "-antispam",
-        "timestamp": "2025-11-12T05:49:06.450452"
-      },
-      {
         "command": "-clear",
         "timestamp": "2025-11-12T05:52:41.125888"
       },
@@ -2747,6 +2755,10 @@
       {
         "command": "-antispam",
         "timestamp": "2025-11-12T14:23:00.521497"
+      },
+      {
+        "command": "-antispam",
+        "timestamp": "2025-11-13T01:06:37.749837"
       }
     ],
     "1298987913622847499": [
